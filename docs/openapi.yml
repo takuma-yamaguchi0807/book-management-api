@@ -1,0 +1,708 @@
+openapi: 3.0.3
+info:
+  title: Book Management API
+  version: 1.0.0
+  description: 書籍と著者を管理するAPI
+
+servers:
+  - url: http://localhost:8080
+    description: ローカル開発環境
+
+paths:
+  /authors:
+    post:
+      summary: 著者登録
+      description: 新しい著者を登録する
+      operationId: createAuthor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAuthorRequest"
+            examples:
+              example1:
+                summary: 著者登録の例
+                value:
+                  name: "山田太郎"
+                  birthDate: "1980-05-15"
+      responses:
+        "201":
+          description: 著者が正常に作成された
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateResponse"
+              examples:
+                example1:
+                  summary: 作成成功の例
+                  value:
+                    id: 1
+        "400":
+          description: リクエストが不正です
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/ValidationErrorResponse"
+                  - $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                example1:
+                  summary: 必須項目が欠如している例
+                  value:
+                    code: "VALIDATION_ERROR"
+                    details:
+                      name: "入力してください"
+                      birthDate: "入力してください"
+                example2:
+                  summary: 生年月日が現在より未来の例
+                  value:
+                    code: "VALIDATION_ERROR"
+                    details:
+                      birthDate: "生年月日は現在より過去である必要があります"
+                example3:
+                  summary: リクエストボディが不正な例
+                  value:
+                    code: "INVALID_REQUEST"
+                    message: "JSON parse error: Unexpected character..."
+        "500":
+          description: サーバー内部エラー
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                example1:
+                  summary: サーバーエラーの例
+                  value:
+                    code: "INTERNAL_SERVER_ERROR"
+                    message: "サーバー内部でエラーが発生しました"
+
+  /authors/{id}:
+    put:
+      summary: 著者更新
+      description: 既存の著者情報を更新する
+      operationId: updateAuthor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: 著者ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAuthorRequest"
+            examples:
+              example1:
+                summary: 著者更新の例
+                value:
+                  name: "山田太郎"
+                  birthDate: "1980-05-15"
+      responses:
+        "204":
+          description: 著者が正常に更新された
+        "400":
+          description: リクエストが不正です
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/ValidationErrorResponse"
+                  - $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                example1:
+                  summary: 必須項目が欠如している例
+                  value:
+                    code: "VALIDATION_ERROR"
+                    details:
+                      name: "入力してください"
+                      birthDate: "入力してください"
+                example2:
+                  summary: 生年月日が現在より未来の例
+                  value:
+                    code: "VALIDATION_ERROR"
+                    details:
+                      birthDate: "生年月日は現在より過去である必要があります"
+                example3:
+                  summary: リクエストボディが不正な例
+                  value:
+                    code: "INVALID_REQUEST"
+                    message: "JSON parse error: Unexpected character..."
+        "404":
+          description: 指定された著者が見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                example1:
+                  summary: 著者が存在しない例
+                  value:
+                    code: "AUTHOR_NOT_FOUND"
+                    message: "指定された著者IDは存在しません"
+        "500":
+          description: サーバー内部エラー
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                example1:
+                  summary: サーバーエラーの例
+                  value:
+                    code: "INTERNAL_SERVER_ERROR"
+                    message: "サーバー内部でエラーが発生しました"
+
+  /books:
+    post:
+      summary: 書籍登録
+      description: 新しい書籍を登録する
+      operationId: createBook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBookRequest"
+            examples:
+              example1:
+                summary: 単一著者の書籍登録の例
+                value:
+                  title: "プログラミング入門"
+                  price: 1980
+                  authorIds: [1]
+                  published: true
+              example2:
+                summary: 複数著者の書籍登録の例
+                value:
+                  title: "システム設計の基礎"
+                  price: 2500
+                  authorIds: [1, 2]
+                  published: false
+      responses:
+        "201":
+          description: 書籍が正常に作成された
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateResponse"
+              examples:
+                example1:
+                  summary: 作成成功の例
+                  value:
+                    id: 1
+        "400":
+          description: リクエストが不正です
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/ValidationErrorResponse"
+                  - $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                example1:
+                  summary: 必須項目が欠如している例
+                  value:
+                    code: "VALIDATION_ERROR"
+                    details:
+                      title: "入力してください"
+                      price: "入力してください"
+                      authorIds: "入力してください"
+                      published: "入力してください"
+                example2:
+                  summary: 価格が0未満の例
+                  value:
+                    code: "VALIDATION_ERROR"
+                    details:
+                      price: "価格は0円以上である必要があります"
+                example3:
+                  summary: 著者IDが空配列の例
+                  value:
+                    code: "VALIDATION_ERROR"
+                    details:
+                      authorIds: "著者は1名以上必要です"
+                example5:
+                  summary: リクエストボディが不正な例
+                  value:
+                    code: "INVALID_REQUEST"
+                    message: "JSON parse error: Unexpected character..."
+        "422":
+          description: リクエストは正しい形式ですが、セマンティックエラーがあります
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+              examples:
+                example1:
+                  summary: 著者IDが存在しない例
+                  value:
+                    code: "RESOURCE_NOT_FOUND"
+                    details:
+                      "authorIds[1]": "指定された著者は存在しません"
+        "500":
+          description: サーバー内部エラー
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                example1:
+                  summary: サーバーエラーの例
+                  value:
+                    code: "INTERNAL_SERVER_ERROR"
+                    message: "サーバー内部でエラーが発生しました"
+
+  /books/{id}:
+    put:
+      summary: 書籍更新
+      description: 既存の書籍情報を更新する（出版済み→未出版への変更は不可）
+      operationId: updateBook
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: 書籍ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateBookRequest"
+            examples:
+              example1:
+                summary: 書籍更新の例
+                value:
+                  title: "プログラミング入門（改訂版）"
+                  price: 2200
+                  authorIds: [1, 2]
+                  published: true
+      responses:
+        "204":
+          description: 書籍が正常に更新された
+        "400":
+          description: リクエストが不正です
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/ValidationErrorResponse"
+                  - $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                example1:
+                  summary: 必須項目が欠如している例
+                  value:
+                    code: "VALIDATION_ERROR"
+                    details:
+                      title: "入力してください"
+                      price: "入力してください"
+                      authorIds: "入力してください"
+                      published: "入力してください"
+                example2:
+                  summary: 価格が0未満の例
+                  value:
+                    code: "VALIDATION_ERROR"
+                    details:
+                      price: "価格は0円以上である必要があります"
+                example3:
+                  summary: 著者IDが空配列の例
+                  value:
+                    code: "VALIDATION_ERROR"
+                    details:
+                      authorIds: "著者は1名以上必要です"
+                example4:
+                  summary: 出版済み→未出版への変更不可の例
+                  value:
+                    code: "BUSINESS_RULE_VIOLATION"
+                    message: "出版済みの書籍を未出版に変更することはできません"
+                example6:
+                  summary: リクエストボディが不正な例
+                  value:
+                    code: "INVALID_REQUEST"
+                    message: "JSON parse error: Unexpected character..."
+        "422":
+          description: リクエストは正しい形式ですが、セマンティックエラーがあります
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+              examples:
+                example1:
+                  summary: 著者IDが存在しない例
+                  value:
+                    code: "RESOURCE_NOT_FOUND"
+                    details:
+                      "authorIds[1]": "指定された著者は存在しません"
+        "404":
+          description: 指定されたリソースが見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                example1:
+                  summary: 書籍IDが存在しない例
+                  value:
+                    code: "BOOK_NOT_FOUND"
+                    message: "指定された書籍は存在しません"
+        "500":
+          description: サーバー内部エラー
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                example1:
+                  summary: サーバーエラーの例
+                  value:
+                    code: "INTERNAL_SERVER_ERROR"
+                    message: "サーバー内部でエラーが発生しました"
+
+  /authors/{id}/books:
+    get:
+      summary: 著者に紐づく書籍一覧取得
+      description: 指定した著者IDに紐づく書籍一覧を取得する
+      operationId: getBooksByAuthor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: 著者ID
+        - name: page_number
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            default: 1
+          description: ページ番号（1から開始）
+        - name: page_size
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: 1ページあたりの件数（最大100件）
+      responses:
+        "200":
+          description: 書籍一覧が正常に取得された
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookListResponse"
+              examples:
+                example1:
+                  summary: 書籍一覧取得の例
+                  value:
+                    items:
+                      - id: 1
+                        title: "プログラミング入門"
+                        price: 1980
+                        published: true
+                        authors:
+                          - id: 1
+                            name: "山田太郎"
+                          - id: 2
+                            name: "佐藤花子"
+                        createdAt: "2024-01-01T10:00:00Z"
+                        updatedAt: "2024-01-01T10:00:00Z"
+                      - id: 2
+                        title: "システム設計の基礎"
+                        price: 3000
+                        published: false
+                        authors:
+                          - id: 1
+                            name: "山田太郎"
+                          - id: 2
+                            name: "佐藤花子"
+                        createdAt: "2024-01-03T10:00:00Z"
+                        updatedAt: "2024-01-03T10:00:00Z"
+                    pagination:
+                      page_number: 1
+                      page_size: 20
+                      total: 45
+                      total_pages: 3
+        "404":
+          description: 指定された著者が見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                example1:
+                  summary: 著者が存在しない例
+                  value:
+                    code: "AUTHOR_NOT_FOUND"
+                    message: "指定された著者は存在しません"
+        "500":
+          description: サーバー内部エラー
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                example1:
+                  summary: サーバーエラーの例
+                  value:
+                    code: "INTERNAL_SERVER_ERROR"
+                    message: "サーバー内部でエラーが発生しました"
+
+components:
+  schemas:
+    CreateResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 作成されたリソースのID
+      required:
+        - id
+
+    Author:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 著者ID
+        name:
+          type: string
+          description: 著者名
+        birthDate:
+          type: string
+          format: date
+          description: 生年月日
+        createdAt:
+          type: string
+          format: date-time
+          description: 作成日時
+        updatedAt:
+          type: string
+          format: date-time
+          description: 更新日時
+      required:
+        - id
+        - name
+        - birthDate
+        - createdAt
+        - updatedAt
+
+    AuthorSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 著者ID
+        name:
+          type: string
+          description: 著者名
+      required:
+        - id
+        - name
+
+    CreateAuthorRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 著者名
+        birthDate:
+          type: string
+          format: date
+          description: 生年月日（現在より過去）
+      required:
+        - name
+        - birthDate
+
+    UpdateAuthorRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 著者名
+        birthDate:
+          type: string
+          format: date
+          description: 生年月日（現在より過去）
+      required:
+        - name
+        - birthDate
+
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 書籍ID
+        title:
+          type: string
+          description: タイトル
+        price:
+          type: integer
+          description: 価格（0以上、単位：円）
+        published:
+          type: boolean
+          description: "出版状況（true: 出版済み、false: 未出版）"
+        authors:
+          type: array
+          items:
+            $ref: "#/components/schemas/AuthorSummary"
+          description: 著者情報のリスト（1名以上）
+        createdAt:
+          type: string
+          format: date-time
+          description: 作成日時
+        updatedAt:
+          type: string
+          format: date-time
+          description: 更新日時
+      required:
+        - id
+        - title
+        - price
+        - published
+        - authors
+        - createdAt
+        - updatedAt
+
+    CreateBookRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: タイトル
+        price:
+          type: integer
+          minimum: 0
+          description: 価格（0以上、単位：円）
+        authorIds:
+          type: array
+          minItems: 1
+          items:
+            type: integer
+            format: int64
+          description: 著者IDのリスト（1名以上、複数可）
+        published:
+          type: boolean
+          description: "出版状況（true: 出版済み、false: 未出版）"
+      required:
+        - title
+        - price
+        - authorIds
+        - published
+
+    UpdateBookRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: タイトル
+        price:
+          type: integer
+          minimum: 0
+          description: 価格（0以上、単位：円）
+        authorIds:
+          type: array
+          minItems: 1
+          items:
+            type: integer
+            format: int64
+          description: 著者IDのリスト（1名以上、再設定可）
+        published:
+          type: boolean
+          description: "出版状況（true: 出版済み、false: 未出版）。出版済み→未出版への変更は不可"
+      required:
+        - title
+        - price
+        - authorIds
+        - published
+
+    BookListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Book"
+          description: 書籍一覧
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+      required:
+        - items
+        - pagination
+
+    Pagination:
+      type: object
+      properties:
+        page_number:
+          type: integer
+          format: int32
+          description: 現在のページ番号
+        page_size:
+          type: integer
+          format: int32
+          description: 1ページあたりの件数
+        total:
+          type: integer
+          format: int64
+          description: 総件数
+        total_pages:
+          type: integer
+          format: int32
+          description: 総ページ数
+      required:
+        - page_number
+        - page_size
+        - total
+        - total_pages
+
+    ValidationErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: エラーコード
+          example: "VALIDATION_ERROR"
+        details:
+          type: object
+          additionalProperties:
+            type: string
+          description: フィールド名をキーとし、エラーメッセージを値とするオブジェクト
+          example:
+            name: "必須フィールドが不足しています"
+            birthDate: "生年月日は現在より過去である必要があります"
+      required:
+        - code
+        - details
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: エラーコード
+          example: "INTERNAL_SERVER_ERROR"
+        message:
+          type: string
+          description: エラーメッセージ
+          example: "サーバー内部でエラーが発生しました"
+      required:
+        - code
+        - message
