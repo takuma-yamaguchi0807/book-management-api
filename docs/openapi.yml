@@ -144,7 +144,7 @@ paths:
                   summary: 著者が存在しない例
                   value:
                     code: "AUTHOR_NOT_FOUND"
-                    message: "指定された著者IDは存在しません"
+                    message: "指定されたIDは存在しません"
         "500":
           description: サーバー内部エラー
           content:

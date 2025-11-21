@@ -1,23 +1,23 @@
-package com.example.bookmanagementapi.domain.author
+package com.example.bookmanagementapi.domain.book
 
 import com.example.bookmanagementapi.domain.ValidationResult
 import com.example.bookmanagementapi.domain.exception.ValidationError
 import com.example.bookmanagementapi.domain.message.ValidationMessages
-import com.example.bookmanagementapi.presentation.author.AuthorFields
+import com.example.bookmanagementapi.presentation.book.BookFields
 
 /**
- * 著者名の値オブジェクト
+ * 書籍タイトルの値オブジェクト
  */
-class AuthorName private constructor(val value: String) {
+class Title private constructor(val value: String) {
     companion object {
         /**
          * リクエストから作成する際に使用（バリデーションあり）
          */
-        fun create(value: String?): ValidationResult<AuthorName> {
+        fun create(value: String?): ValidationResult<Title> {
             return if (value.isNullOrBlank()) {
-                ValidationResult.Failure(ValidationError(AuthorFields.NAME, ValidationMessages.REQUIRED))
+                ValidationResult.Failure(ValidationError(BookFields.TITLE, ValidationMessages.REQUIRED))
             } else {
-                ValidationResult.Success(AuthorName(value))
+                ValidationResult.Success(Title(value))
             }
         }
 
@@ -27,14 +27,14 @@ class AuthorName private constructor(val value: String) {
          * DBの生値をそのままラップする。すでに不正な値が入っている可能性もある。
          * 不変条件は保証しないので、利用側で必要に応じてチェックすること。
          */
-        fun reconstruct(value: String): AuthorName {
-            return AuthorName(value)
+        fun reconstruct(value: String): Title {
+            return Title(value)
         }
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is AuthorName) return false
+        if (other !is Title) return false
         return value == other.value
     }
 
@@ -43,7 +43,7 @@ class AuthorName private constructor(val value: String) {
     }
 
     override fun toString(): String {
-        return "AuthorName(value='$value')"
+        return "Title(value='$value')"
     }
 }
 

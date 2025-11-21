@@ -1,9 +1,9 @@
 package com.example.bookmanagementapi.usecase.author
 
+import com.example.bookmanagementapi.domain.author.AuthorId
+
 /**
  * 著者登録レスポンスDTO
  */
-data class CreateAuthorResponseDto(
-    val id: Long
-)
+typealias CreateAuthorResponseDto = AuthorId
 

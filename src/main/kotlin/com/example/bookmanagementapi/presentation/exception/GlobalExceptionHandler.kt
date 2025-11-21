@@ -1,8 +1,14 @@
 package com.example.bookmanagementapi.presentation.exception
 
+import com.example.bookmanagementapi.domain.exception.BusinessRuleViolationException
 import com.example.bookmanagementapi.domain.exception.DomainValidationException
+import com.example.bookmanagementapi.domain.exception.ResourceNotFoundException
+import com.example.bookmanagementapi.domain.message.ErrorMessages
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.web.bind.MissingServletRequestParameterException
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
@@ -22,6 +28,43 @@ class GlobalExceptionHandler {
         )
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response)
     }
+
+    /**
+     * リソースが存在しない場合のエラーを処理
+     */
+    @ExceptionHandler(ResourceNotFoundException::class)
+    fun handleResourceNotFoundException(e: ResourceNotFoundException): ResponseEntity<ErrorResponse> {
+        val response = ErrorResponse(
+            code = "RESOURCE_NOT_FOUND",
+            message = e.message ?: ErrorMessages.RESOURCE_NOT_FOUND
+        )
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response)
+    }
+
+    /**
+     * ビジネスルール違反のエラーを処理
+     */
+    @ExceptionHandler(BusinessRuleViolationException::class)
+    fun handleBusinessRuleViolationException(e: BusinessRuleViolationException): ResponseEntity<ErrorResponse> {
+        val response = ErrorResponse(
+            code = "BUSINESS_RULE_VIOLATION",
+            message = e.message ?: "ビジネスルール違反が発生しました"
+        )
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response)
+    }
+
+    /**
+     * パス変数の型変換エラーを処理
+     * 例: /authors/abc のように数値以外の文字列が渡された場合
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException::class)
+    fun handleMethodArgumentTypeMismatchException(e: MethodArgumentTypeMismatchException): ResponseEntity<ErrorResponse> {
+        val response = ErrorResponse(
+            code = "INVALID_REQUEST",
+            message = ErrorMessages.invalidPathParameter(e.name ?: "unknown")
+        )
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response)
+    }
 }
 
 /**
@@ -30,5 +73,13 @@ class GlobalExceptionHandler {
 data class ValidationErrorResponse(
     val code: String,
     val details: Map<String, String>
+)
+
+/**
+ * エラーレスポンス
+ */
+data class ErrorResponse(
+    val code: String,
+    val message: String
 )
 

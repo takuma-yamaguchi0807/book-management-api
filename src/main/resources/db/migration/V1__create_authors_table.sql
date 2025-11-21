@@ -1,0 +1,8 @@
+CREATE TABLE authors (
+    id         BIGSERIAL PRIMARY KEY,
+    name       TEXT NOT NULL,
+    birth_date DATE NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
