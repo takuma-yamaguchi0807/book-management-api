@@ -1,5 +1,6 @@
 package com.example.bookmanagementapi.presentation.book
 
+import com.example.bookmanagementapi.presentation.shared.CommonFields
 import com.example.bookmanagementapi.usecase.book.CreateBookRequestDto
 import com.example.bookmanagementapi.usecase.book.CreateBookResponseDto
 import com.example.bookmanagementapi.usecase.book.CreateBookUsecase
@@ -31,8 +32,8 @@ class BookController(
     @GetMapping
     fun getBooks(
         @RequestParam authorId: Long,
-        @RequestParam(defaultValue = "1") pageNumber: Int,
-        @RequestParam(defaultValue = "20") pageSize: Int
+        @RequestParam(name = CommonFields.PAGE_NUMBER, defaultValue = "1") pageNumber: Int,
+        @RequestParam(name = CommonFields.PAGE_SIZE, defaultValue = "20") pageSize: Int
     ): ResponseEntity<BookListResponse> {
         val requestDto = GetBooksByAuthorRequestDto(
             authorId = authorId,

@@ -16,9 +16,6 @@ object ErrorMessages {
         return bundle.getString("error.invalid.path.parameter").replace("{0}", parameterName)
     }
     
-    val AUTHOR_NOT_FOUND: String
-        get() = bundle.getString("error.author.not.found")
-    
     val BUSINESS_RULE_VIOLATION_PUBLISHED_TO_UNPUBLISHED: String
         get() = bundle.getString("error.business.rule.violation.published.to.unpublished")
 }

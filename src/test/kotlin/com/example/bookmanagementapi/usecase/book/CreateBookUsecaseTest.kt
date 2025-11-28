@@ -229,7 +229,7 @@ class CreateBookUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("指定された著者は存在しません", exception.errors["author_ids[0]"])
+            assertEquals("指定されたIDは存在しません", exception.errors["author_ids[0]"])
         }
 
         @Test
@@ -255,8 +255,8 @@ class CreateBookUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(2, exception.errors.size)
-            assertEquals("指定された著者は存在しません", exception.errors["author_ids[1]"])
-            assertEquals("指定された著者は存在しません", exception.errors["author_ids[2]"])
+            assertEquals("指定されたIDは存在しません", exception.errors["author_ids[1]"])
+            assertEquals("指定されたIDは存在しません", exception.errors["author_ids[2]"])
         }
 
         @ParameterizedTest

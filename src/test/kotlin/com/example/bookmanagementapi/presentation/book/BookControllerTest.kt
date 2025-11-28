@@ -96,8 +96,8 @@ class BookControllerTest {
                 mockMvc.perform(
                     get("/api/v1/books")
                         .param("authorId", authorId.toString())
-                        .param("pageNumber", "1")
-                        .param("pageSize", "20")
+                        .param("page_number", "1")
+                        .param("page_size", "20")
                 )
                     .andExpect(status().isOk)
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -108,10 +108,10 @@ class BookControllerTest {
                     .andExpect(jsonPath("$.items[0].published").value(true))
                     .andExpect(jsonPath("$.items[0].authors[0].id").value(1L))
                     .andExpect(jsonPath("$.items[0].authors[0].name").value("山田太郎"))
-                    .andExpect(jsonPath("$.pagination.pageNumber").value(1))
-                    .andExpect(jsonPath("$.pagination.pageSize").value(20))
+                    .andExpect(jsonPath("$.pagination.page_number").value(1))
+                    .andExpect(jsonPath("$.pagination.page_size").value(20))
                     .andExpect(jsonPath("$.pagination.total").value(1L))
-                    .andExpect(jsonPath("$.pagination.totalPages").value(1))
+                    .andExpect(jsonPath("$.pagination.total_pages").value(1))
                 
                 verify(getBooksByAuthorUsecase).execute(any())
             }
@@ -140,8 +140,8 @@ class BookControllerTest {
                 )
                     .andExpect(status().isOk)
                     .andExpect(jsonPath("$.items").isEmpty)
-                    .andExpect(jsonPath("$.pagination.pageNumber").value(1))
-                    .andExpect(jsonPath("$.pagination.pageSize").value(20))
+                    .andExpect(jsonPath("$.pagination.page_number").value(1))
+                    .andExpect(jsonPath("$.pagination.page_size").value(20))
             }
         }
 

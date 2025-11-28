@@ -1,5 +1,6 @@
 package com.example.bookmanagementapi.presentation.book
 
+import com.example.bookmanagementapi.presentation.book.BookFields
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -8,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class UpdateBookRequest(
     val title: String?,
     val price: Int?,
-    @JsonProperty("author_ids")
+    @JsonProperty(BookFields.AUTHOR_IDS)
     val authorIds: List<Long>?,
     val published: Boolean?
 )

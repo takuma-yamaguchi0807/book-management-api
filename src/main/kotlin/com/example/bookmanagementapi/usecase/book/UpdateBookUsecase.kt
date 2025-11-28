@@ -126,7 +126,7 @@ class UpdateBookUsecase(
         val errors = mutableMapOf<String, String>()
         authorIds.forEachIndexed { index, authorId ->
             if (!foundAuthorIds.contains(authorId.value)) {
-                errors["${BookFields.AUTHOR_IDS}[$index]"] = ErrorMessages.AUTHOR_NOT_FOUND
+                errors["${BookFields.AUTHOR_IDS}[$index]"] = ErrorMessages.RESOURCE_NOT_FOUND
             }
         }
         

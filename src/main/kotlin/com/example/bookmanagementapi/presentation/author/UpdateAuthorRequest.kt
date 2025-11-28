@@ -1,5 +1,6 @@
 package com.example.bookmanagementapi.presentation.author
 
+import com.example.bookmanagementapi.presentation.author.AuthorFields
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -7,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  */
 data class UpdateAuthorRequest(
     val name: String?,
-    @JsonProperty("birth_date")
+    @JsonProperty(AuthorFields.BIRTH_DATE)
     val birthDate: String?
 )
 

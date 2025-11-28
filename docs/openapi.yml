@@ -143,7 +143,7 @@ paths:
                 example1:
                   summary: 著者が存在しない例
                   value:
-                    code: "AUTHOR_NOT_FOUND"
+                    code: "RESOURCE_NOT_FOUND"
                     message: "指定されたIDは存在しません"
         "500":
           description: サーバー内部エラー
@@ -350,7 +350,7 @@ paths:
                   value:
                     code: "VALIDATION_ERROR"
                     details:
-                      "author_ids[1]": "指定された著者は存在しません"
+                      "author_ids[1]": "指定されたIDは存在しません"
                 example5:
                   summary: リクエストボディが不正な例
                   value:
@@ -434,7 +434,7 @@ paths:
                   value:
                     code: "VALIDATION_ERROR"
                     details:
-                      "author_ids[1]": "指定された著者は存在しません"
+                      "author_ids[1]": "指定されたIDは存在しません"
                 example5:
                   summary: リクエストボディが不正な例
                   value:
@@ -462,8 +462,8 @@ paths:
                 example1:
                   summary: 書籍IDが存在しない例
                   value:
-                    code: "BOOK_NOT_FOUND"
-                    message: "指定された書籍は存在しません"
+                    code: "RESOURCE_NOT_FOUND"
+                    message: "指定されたIDは存在しません"
         "500":
           description: サーバー内部エラー
           content:
