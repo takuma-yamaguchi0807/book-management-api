@@ -108,10 +108,6 @@ class CreateBookUsecase(
      * IN句で一括取得し、存在しないIDだけをエラーとして返す
      */
     private fun validateAuthorIdsExist(authorIds: List<AuthorId>) {
-        if (authorIds.isEmpty()) {
-            return
-        }
-        
         val foundAuthors = authorRepository.findByIds(authorIds)
         val foundAuthorIds = foundAuthors.map { it.id!!.value }.toSet()
         

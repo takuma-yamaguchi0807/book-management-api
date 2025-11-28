@@ -6,7 +6,7 @@
 - ✅ PUT /authors/{id} - 著者更新（実装済み）
 - ✅ POST /books - 書籍登録（実装済み）
 - ✅ PUT /books/{id} - 書籍更新（実装済み）
-- ❌ GET /authors/{id}/books - 著者に紐づく書籍一覧取得
+- ✅ GET /authors/{id}/books - 著者に紐づく書籍一覧取得
 
 ---
 
@@ -42,10 +42,10 @@
 
 ### 5. 書籍一覧取得機能の実装
 
-- [ ] BookQueryService インターフェースを作成
-- [ ] BookQueryServiceImpl を実装（JOIN クエリ、ページネーション）
-- [ ] GetBooksByAuthorUsecase を作成
-- [ ] BookController に GET /authors/{id}/books エンドポイントを追加
+- [x] BookQueryService インターフェースを作成
+- [x] BookQueryServiceImpl を実装（JOIN クエリ、ページネーション）
+- [x] GetBooksByAuthorUsecase を作成
+- [x] BookController に GET /authors/{id}/books エンドポイントを追加
 
 ### 6. 例外ハンドリングの拡張
 
@@ -53,6 +53,15 @@
 - [x] GlobalExceptionHandler に BusinessRuleViolationException のハンドリングを追加
 - [x] GlobalExceptionHandler のメッセージを messages.properties に定義（ErrorMessages を使用）
 - [x] 書籍関連のバリデーションメッセージを追加
+
+### 7. 単体テスト（UT）の追加と動作確認
+
+- [x] ドメイン層の単体テストを追加（値オブジェクト、エンティティのバリデーション）
+- [ ] Usecase 層の単体テストを追加（ビジネスロジックのテスト）
+- [ ] Repository 層の単体テストを追加（データアクセスのテスト）
+- [x] Controller 層の単体テストを追加（HTTP リクエスト/レスポンスのテスト）
+- [ ] Postman 等での動作確認（各エンドポイントの手動テスト）
+- [ ] kotlin like な書き方になってるか？
 
 ---
 
@@ -64,3 +73,4 @@
 4. 書籍更新機能の実装
 5. 書籍一覧取得機能の実装
 6. 例外ハンドリングの拡張
+7. 単体テスト（UT）の追加と動作確認

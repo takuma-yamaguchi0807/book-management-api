@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
  * 著者コントローラー
  */
 @RestController
-@RequestMapping("/authors")
+@RequestMapping(AuthorFields.PATH_BASE)
 class AuthorController(
     private val createAuthorUsecase: CreateAuthorUsecase,
     private val updateAuthorUsecase: UpdateAuthorUsecase
@@ -34,7 +34,7 @@ class AuthorController(
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(AuthorFields.PATH_ID_SEGMENT)
     fun updateAuthor(
         @PathVariable id: Long,
         @RequestBody request: UpdateAuthorRequest
@@ -47,4 +47,3 @@ class AuthorController(
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 }
-

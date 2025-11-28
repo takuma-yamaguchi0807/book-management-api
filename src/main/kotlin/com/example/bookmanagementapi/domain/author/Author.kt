@@ -3,7 +3,7 @@ package com.example.bookmanagementapi.domain.author
 /**
  * 著者エンティティ
  */
-data class Author(
+data class Author private constructor(
     val id: AuthorId?,
     val name: AuthorName,
     val birthDate: BirthDate

@@ -29,5 +29,11 @@ object ValidationMessages {
     
     val AUTHOR_IDS_DUPLICATE: String
         get() = bundle.getString("validation.author.ids.duplicate")
+    
+    val PAGE_NUMBER_MUST_BE_AT_LEAST_ONE: String
+        get() = bundle.getString("validation.page.number.must.be.at.least.one")
+    
+    val PAGE_SIZE_MUST_BE_BETWEEN_ONE_AND_NINETY_NINE: String
+        get() = bundle.getString("validation.page.size.must.be.between.one.and.ninety.nine")
 }
 

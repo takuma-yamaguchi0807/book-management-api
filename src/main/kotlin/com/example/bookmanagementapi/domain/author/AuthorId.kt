@@ -8,7 +8,7 @@ import com.example.bookmanagementapi.presentation.author.AuthorFields
 /**
  * 著者IDの値オブジェクト
  */
-class AuthorId private constructor(val value: Long) {
+data class AuthorId private constructor(val value: Long) {
     companion object {
         /**
          * リクエストから作成する際に使用（バリデーションあり）
@@ -24,28 +24,16 @@ class AuthorId private constructor(val value: Long) {
         }
 
         /**
-         * DBから取得する際に使用（バリデーションなし）
-         * 
-         * DBの生値をそのままラップする。すでに不正な値が入っている可能性もある。
+         * 再構築用
+         *
+         * 永続化された値を元にインスタンスを生成する。
+         * 値は必須であり、nullの場合は例外をスローする。
          * 不変条件は保証しないので、利用側で必要に応じてチェックすること。
          */
-        fun reconstruct(value: Long): AuthorId {
+        fun reconstruct(value: Long?): AuthorId {
+            requireNotNull(value) { "AuthorId must not be null" }
             return AuthorId(value)
         }
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is AuthorId) return false
-        return value == other.value
-    }
-
-    override fun hashCode(): Int {
-        return value.hashCode()
-    }
-
-    override fun toString(): String {
-        return "AuthorId(value=$value)"
     }
 }
 

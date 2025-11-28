@@ -5,7 +5,7 @@ import com.example.bookmanagementapi.domain.author.AuthorId
 /**
  * 書籍エンティティ
  */
-data class Book(
+data class Book private constructor(
     val id: BookId?,
     val title: Title,
     val price: Price,

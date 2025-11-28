@@ -10,7 +10,7 @@ import java.time.format.DateTimeParseException
 /**
  * 生年月日の値オブジェクト
  */
-class BirthDate private constructor(val value: LocalDate) {
+data class BirthDate private constructor(val value: LocalDate) {
     companion object {
         /**
          * リクエストから作成する際に使用（バリデーションあり）
@@ -34,28 +34,16 @@ class BirthDate private constructor(val value: LocalDate) {
         }
 
         /**
-         * DBから取得する際に使用（バリデーションなし）
-         * 
-         * DBの生値をそのままラップする。すでに不正な値が入っている可能性もある。
+         * 再構築用
+         *
+         * 永続化された値を元にインスタンスを生成する。
+         * 値は必須であり、nullの場合は例外をスローする。
          * 不変条件は保証しないので、利用側で必要に応じてチェックすること。
          */
-        fun reconstruct(value: LocalDate): BirthDate {
+        fun reconstruct(value: LocalDate?): BirthDate {
+            requireNotNull(value) { "BirthDate must not be null" }
             return BirthDate(value)
         }
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is BirthDate) return false
-        return value == other.value
-    }
-
-    override fun hashCode(): Int {
-        return value.hashCode()
-    }
-
-    override fun toString(): String {
-        return "BirthDate(value=$value)"
     }
 }
 

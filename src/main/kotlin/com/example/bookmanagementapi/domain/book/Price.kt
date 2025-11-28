@@ -8,7 +8,7 @@ import com.example.bookmanagementapi.presentation.book.BookFields
 /**
  * 書籍価格の値オブジェクト
  */
-class Price private constructor(val value: Int) {
+data class Price private constructor(val value: Int) {
     companion object {
         /**
          * リクエストから作成する際に使用（バリデーションあり）
@@ -24,28 +24,16 @@ class Price private constructor(val value: Int) {
         }
 
         /**
-         * DBから取得する際に使用（バリデーションなし）
-         * 
-         * DBの生値をそのままラップする。すでに不正な値が入っている可能性もある。
+         * 再構築用
+         *
+         * 永続化された値を元にインスタンスを生成する。
+         * 値は必須であり、nullの場合は例外をスローする。
          * 不変条件は保証しないので、利用側で必要に応じてチェックすること。
          */
-        fun reconstruct(value: Int): Price {
+        fun reconstruct(value: Int?): Price {
+            requireNotNull(value) { "Price must not be null" }
             return Price(value)
         }
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is Price) return false
-        return value == other.value
-    }
-
-    override fun hashCode(): Int {
-        return value.hashCode()
-    }
-
-    override fun toString(): String {
-        return "Price(value=$value)"
     }
 }
 

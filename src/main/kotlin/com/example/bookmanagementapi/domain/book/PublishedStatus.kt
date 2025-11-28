@@ -8,7 +8,7 @@ import com.example.bookmanagementapi.presentation.book.BookFields
 /**
  * 出版ステータスの値オブジェクト
  */
-class PublishedStatus private constructor(val value: Boolean) {
+data class PublishedStatus private constructor(val value: Boolean) {
     companion object {
         /**
          * リクエストから作成する際に使用（バリデーションあり）
@@ -21,28 +21,16 @@ class PublishedStatus private constructor(val value: Boolean) {
         }
 
         /**
-         * DBから取得する際に使用（バリデーションなし）
-         * 
-         * DBの生値をそのままラップする。すでに不正な値が入っている可能性もある。
+         * 再構築用
+         *
+         * 永続化された値を元にインスタンスを生成する。
+         * 値は必須であり、nullの場合は例外をスローする。
          * 不変条件は保証しないので、利用側で必要に応じてチェックすること。
          */
-        fun reconstruct(value: Boolean): PublishedStatus {
+        fun reconstruct(value: Boolean?): PublishedStatus {
+            requireNotNull(value) { "PublishedStatus must not be null" }
             return PublishedStatus(value)
         }
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is PublishedStatus) return false
-        return value == other.value
-    }
-
-    override fun hashCode(): Int {
-        return value.hashCode()
-    }
-
-    override fun toString(): String {
-        return "PublishedStatus(value=$value)"
     }
 }
 

@@ -81,10 +81,6 @@ com.example.bookmanagementapi
   - `infra/repository` - 単一エンティティの読み取り（単純なクエリ）
   - `domain/queryservice`（インターフェース） + `infra/queryservice`（実装） - 複数テーブルを跨いだ集約的な読み取り操作（複雑なクエリ）
 
-### 書籍一覧取得の配置
-
-`GET /authors/{id}/books`（著者に紐づく書籍一覧取得）は、書籍リソースを取得するため `presentation/book/controller` に配置します。
-
 ## 起動方法
 
 ### 前提条件
