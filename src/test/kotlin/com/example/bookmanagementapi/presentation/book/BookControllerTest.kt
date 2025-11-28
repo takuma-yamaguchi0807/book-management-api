@@ -314,7 +314,7 @@ class BookControllerTest {
             }
 
             @Test
-            @DisplayName("ビジネスルール違反の場合、400 Bad Requestが返されること")
+            @DisplayName("ビジネスルール違反の場合、422 Unprocessable Entityが返されること")
             fun updateBook_businessRuleViolation() {
                 // given
                 val bookId = 1L
@@ -334,7 +334,7 @@ class BookControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                 )
-                    .andExpect(status().isBadRequest)
+                    .andExpect(status().isUnprocessableEntity)
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.code").value("BUSINESS_RULE_VIOLATION"))
                     .andExpect(jsonPath("$.message").value("出版済みの書籍を未出版に変更することはできません"))

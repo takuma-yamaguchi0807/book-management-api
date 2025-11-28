@@ -50,7 +50,7 @@ class GlobalExceptionHandler {
             code = "BUSINESS_RULE_VIOLATION",
             message = e.message ?: "ビジネスルール違反が発生しました"
         )
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response)
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response)
     }
 
     /**
