@@ -24,7 +24,9 @@ object DomainValidationService {
                     // 成功時は何もしない
                 }
                 is ValidationResult.Failure -> {
-                    errors[result.error.field] = result.error.message
+                    result.errors.forEach { error ->
+                        errors[error.field] = error.message
+                    }
                 }
             }
         }

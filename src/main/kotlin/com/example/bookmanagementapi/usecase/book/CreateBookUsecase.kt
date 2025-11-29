@@ -83,7 +83,7 @@ class CreateBookUsecase(
         
         // 各要素をAuthorIdに変換
         val validatedAuthorIds = mutableListOf<AuthorId>()
-        val errors = mutableMapOf<String, String>()
+        val errors = mutableListOf<ValidationError>()
         
         authorIds.forEachIndexed { index, authorIdValue ->
             val authorIdResult = AuthorId.createWithFieldName(authorIdValue, BookFields.AUTHOR_IDS)
@@ -92,13 +92,15 @@ class CreateBookUsecase(
                     validatedAuthorIds.add(authorIdResult.value)
                 }
                 is ValidationResult.Failure -> {
-                    errors["${BookFields.AUTHOR_IDS}[$index]"] = authorIdResult.error.message
+                    authorIdResult.errors.forEach { error ->
+                        errors.add(ValidationError("${BookFields.AUTHOR_IDS}[$index]", error.message))
+                    }
                 }
             }
         }
         
         if (errors.isNotEmpty()) {
-            throw DomainValidationException(errors)
+            return ValidationResult.Failure(errors)
         }
         
         return ValidationResult.Success(validatedAuthorIds)

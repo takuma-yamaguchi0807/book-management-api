@@ -8,6 +8,8 @@ import com.example.bookmanagementapi.domain.exception.ValidationError
  */
 sealed class ValidationResult<out T> {
     data class Success<T>(val value: T) : ValidationResult<T>()
-    data class Failure(val error: ValidationError) : ValidationResult<Nothing>()
+    data class Failure(val errors: List<ValidationError>) : ValidationResult<Nothing>() {
+        constructor(error: ValidationError) : this(listOf(error))
+    }
 }
 

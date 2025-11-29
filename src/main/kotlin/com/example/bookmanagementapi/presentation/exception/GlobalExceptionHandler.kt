@@ -4,6 +4,7 @@ import com.example.bookmanagementapi.domain.exception.BusinessRuleViolationExcep
 import com.example.bookmanagementapi.domain.exception.DomainValidationException
 import com.example.bookmanagementapi.domain.exception.ResourceNotFoundException
 import com.example.bookmanagementapi.domain.message.ErrorMessages
+import com.example.bookmanagementapi.domain.message.ValidationMessages
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -53,6 +54,19 @@ class GlobalExceptionHandler {
             details = e.errors
         )
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response)
+    }
+
+    /**
+     * 必須リクエストパラメータが欠如している場合のエラーを処理
+     * 例: GET /api/v1/books で author_id が指定されていない場合
+     */
+    @ExceptionHandler(MissingServletRequestParameterException::class)
+    fun handleMissingServletRequestParameterException(e: MissingServletRequestParameterException): ResponseEntity<ValidationErrorResponse> {
+        val response = ValidationErrorResponse(
+            code = "VALIDATION_ERROR",
+            details = mapOf(e.parameterName to ValidationMessages.REQUIRED)
+        )
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response)
     }
 
     /**
