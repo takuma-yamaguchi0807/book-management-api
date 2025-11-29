@@ -14,11 +14,21 @@ data class AuthorId private constructor(val value: Long) {
          * リクエストから作成する際に使用（バリデーションあり）
          */
         fun create(value: Long?): ValidationResult<AuthorId> {
+            return createWithFieldName(value, AuthorFields.ID)
+        }
+
+        /**
+         * フィールド名を指定してリクエストから作成する際に使用（バリデーションあり）
+         * 
+         * @param value 著者IDの値
+         * @param fieldName エラーレスポンスで使用するフィールド名
+         */
+        fun createWithFieldName(value: Long?, fieldName: String): ValidationResult<AuthorId> {
             if (value == null) {
-                return ValidationResult.Failure(ValidationError(AuthorFields.ID, ValidationMessages.REQUIRED))
+                return ValidationResult.Failure(ValidationError(fieldName, ValidationMessages.REQUIRED))
             }
             if (value <= 0) {
-                return ValidationResult.Failure(ValidationError(AuthorFields.ID, ValidationMessages.AUTHOR_ID_MUST_BE_POSITIVE))
+                return ValidationResult.Failure(ValidationError(fieldName, ValidationMessages.MUST_BE_POSITIVE))
             }
             return ValidationResult.Success(AuthorId(value))
         }

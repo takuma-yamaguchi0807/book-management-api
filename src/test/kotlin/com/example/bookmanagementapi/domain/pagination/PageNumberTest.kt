@@ -47,7 +47,7 @@ class PageNumberTest {
             fun lessThanOne(value: Int) {
                 val result = PageNumber.create(value)
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.PAGE_NUMBER_MUST_BE_AT_LEAST_ONE, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.MUST_BE_POSITIVE, (result as ValidationResult.Failure).error.message)
             }
         }
     }

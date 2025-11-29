@@ -53,13 +53,13 @@ paths:
                     code: "VALIDATION_ERROR"
                     details:
                       name: "入力してください"
-                      birthDate: "入力してください"
+                      birth_date: "入力してください"
                 example2:
                   summary: 生年月日が現在より未来の例
                   value:
                     code: "VALIDATION_ERROR"
                     details:
-                      birthDate: "生年月日は現在より過去である必要があります"
+                      birth_date: "現在より過去である必要があります"
                 example3:
                   summary: リクエストボディが不正な例
                   value:
@@ -121,13 +121,13 @@ paths:
                     code: "VALIDATION_ERROR"
                     details:
                       name: "入力してください"
-                      birthDate: "入力してください"
+                      birth_date: "入力してください"
                 example2:
                   summary: 生年月日が現在より未来の例
                   value:
                     code: "VALIDATION_ERROR"
                     details:
-                      birthDate: "生年月日は現在より過去である必要があります"
+                      birth_date: "現在より過去である必要があります"
                 example3:
                   summary: リクエストボディが不正な例
                   value:
@@ -144,7 +144,7 @@ paths:
                   summary: 著者が存在しない例
                   value:
                     code: "RESOURCE_NOT_FOUND"
-                    message: "指定されたIDは存在しません"
+                    message: "存在しません"
         "500":
           description: サーバー内部エラー
           content:
@@ -164,7 +164,7 @@ paths:
       description: 指定した著者IDに紐づく書籍一覧を取得する。著者が存在しない場合や、該当する書籍がない場合は空の配列を返す。
       operationId: getBooksByAuthor
       parameters:
-        - name: authorId
+        - name: author_id
           in: query
           required: true
           schema:
@@ -252,19 +252,19 @@ paths:
                   value:
                     code: "VALIDATION_ERROR"
                     details:
-                      authorId: "著者IDは必須です"
+                      author_id: "入力してください"
                 example2:
                   summary: ページ番号が0以下の例
                   value:
                     code: "VALIDATION_ERROR"
                     details:
-                      page_number: "ページ番号は1以上である必要があります"
+                      page_number: "1以上である必要があります"
                 example3:
                   summary: ページサイズが範囲外の例
                   value:
                     code: "VALIDATION_ERROR"
                     details:
-                      page_size: "ページサイズは1以上100未満である必要があります"
+                      page_size: "1以上100未満である必要があります"
         "500":
           description: サーバー内部エラー
           content:
@@ -338,19 +338,19 @@ paths:
                   value:
                     code: "VALIDATION_ERROR"
                     details:
-                      price: "価格は0円以上である必要があります"
+                      price: "0以上である必要があります"
                 example3:
                   summary: 著者IDが空配列の例
                   value:
                     code: "VALIDATION_ERROR"
                     details:
-                      author_ids: "著者は1名以上必要です"
+                      author_ids: "1件以上必要です"
                 example4:
                   summary: 著者IDが存在しない例
                   value:
                     code: "VALIDATION_ERROR"
                     details:
-                      "author_ids[1]": "指定されたIDは存在しません"
+                      "author_ids[1]": "存在しません"
                 example5:
                   summary: リクエストボディが不正な例
                   value:
@@ -422,19 +422,19 @@ paths:
                   value:
                     code: "VALIDATION_ERROR"
                     details:
-                      price: "価格は0円以上である必要があります"
+                      price: "0以上である必要があります"
                 example3:
                   summary: 著者IDが空配列の例
                   value:
                     code: "VALIDATION_ERROR"
                     details:
-                      author_ids: "著者は1名以上必要です"
+                      author_ids: "1件以上必要です"
                 example4:
                   summary: 著者IDが存在しない例
                   value:
                     code: "VALIDATION_ERROR"
                     details:
-                      "author_ids[1]": "指定されたIDは存在しません"
+                      "author_ids[1]": "存在しません"
                 example5:
                   summary: リクエストボディが不正な例
                   value:
@@ -463,7 +463,7 @@ paths:
                   summary: 書籍IDが存在しない例
                   value:
                     code: "RESOURCE_NOT_FOUND"
-                    message: "指定されたIDは存在しません"
+                    message: "存在しません"
         "500":
           description: サーバー内部エラー
           content:
@@ -703,7 +703,7 @@ components:
           description: フィールド名をキーとし、エラーメッセージを値とするオブジェクト
           example:
             name: "必須フィールドが不足しています"
-            birth_date: "生年月日は現在より過去である必要があります"
+            birth_date: "現在より過去である必要があります"
       required:
         - code
         - details

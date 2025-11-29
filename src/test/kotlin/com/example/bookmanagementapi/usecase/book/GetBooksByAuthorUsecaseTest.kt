@@ -228,7 +228,7 @@ class GetBooksByAuthorUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("著者IDは1以上である必要があります", exception.errors["id"])
+            assertEquals("1以上である必要があります", exception.errors["author_id"])
         }
 
 
@@ -248,7 +248,7 @@ class GetBooksByAuthorUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("ページ番号は1以上である必要があります", exception.errors["page_number"])
+            assertEquals("1以上である必要があります", exception.errors["page_number"])
         }
 
 
@@ -268,7 +268,7 @@ class GetBooksByAuthorUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("ページサイズは1以上100未満である必要があります", exception.errors["page_size"])
+            assertEquals("1以上100未満である必要があります", exception.errors["page_size"])
         }
 
         @ParameterizedTest
@@ -287,7 +287,7 @@ class GetBooksByAuthorUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("ページサイズは1以上100未満である必要があります", exception.errors["page_size"])
+            assertEquals("1以上100未満である必要があります", exception.errors["page_size"])
         }
 
 
@@ -306,9 +306,9 @@ class GetBooksByAuthorUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(3, exception.errors.size)
-            assertEquals("著者IDは1以上である必要があります", exception.errors["id"])
-            assertEquals("ページ番号は1以上である必要があります", exception.errors["page_number"])
-            assertEquals("ページサイズは1以上100未満である必要があります", exception.errors["page_size"])
+            assertEquals("1以上である必要があります", exception.errors["author_id"])
+            assertEquals("1以上である必要があります", exception.errors["page_number"])
+            assertEquals("1以上100未満である必要があります", exception.errors["page_size"])
         }
     }
 }

@@ -8,6 +8,7 @@ import com.example.bookmanagementapi.domain.author.AuthorRepository
 import com.example.bookmanagementapi.domain.author.BirthDate
 import com.example.bookmanagementapi.domain.exception.ResourceNotFoundException
 import com.example.bookmanagementapi.domain.service.DomainValidationService
+import com.example.bookmanagementapi.presentation.author.AuthorFields
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -21,7 +22,7 @@ class UpdateAuthorUsecase(
     @Transactional
     fun execute(id: Long, request: UpdateAuthorRequestDto) {
         // IDのバリデーション
-        val authorIdResult = AuthorId.create(id)
+        val authorIdResult = AuthorId.createWithFieldName(id, AuthorFields.ID)
         val nameResult = AuthorName.create(request.name)
         val birthDateResult = BirthDate.create(request.birthDate)
 

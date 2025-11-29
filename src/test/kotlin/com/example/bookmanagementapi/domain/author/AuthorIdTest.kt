@@ -47,7 +47,7 @@ class AuthorIdTest {
             fun notPositive(value: Long) {
                 val result = AuthorId.create(value)
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.AUTHOR_ID_MUST_BE_POSITIVE, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.MUST_BE_POSITIVE, (result as ValidationResult.Failure).error.message)
             }
         }
     }

@@ -13,6 +13,7 @@ object BookFields {
     const val ID = "id"
     const val TITLE = "title"
     const val PRICE = "price"
+    const val AUTHOR_ID = "author_id"
     const val AUTHOR_IDS = "author_ids"
     const val PUBLISHED = "published"
 }

@@ -18,7 +18,7 @@ data class Price private constructor(val value: Int) {
                 return ValidationResult.Failure(ValidationError(BookFields.PRICE, ValidationMessages.REQUIRED))
             }
             if (value < 0) {
-                return ValidationResult.Failure(ValidationError(BookFields.PRICE, ValidationMessages.PRICE_MUST_BE_NON_NEGATIVE))
+                return ValidationResult.Failure(ValidationError(BookFields.PRICE, ValidationMessages.MUST_BE_NON_NEGATIVE))
             }
             return ValidationResult.Success(Price(value))
         }

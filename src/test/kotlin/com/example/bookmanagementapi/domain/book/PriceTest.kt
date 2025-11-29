@@ -45,7 +45,7 @@ class PriceTest {
             fun negativeValue() {
                 val result = Price.create(-1)
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.PRICE_MUST_BE_NON_NEGATIVE, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.MUST_BE_NON_NEGATIVE, (result as ValidationResult.Failure).error.message)
             }
         }
     }

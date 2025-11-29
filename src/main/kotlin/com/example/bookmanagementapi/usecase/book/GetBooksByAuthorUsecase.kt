@@ -7,6 +7,7 @@ import com.example.bookmanagementapi.domain.pagination.PageSize
 import com.example.bookmanagementapi.domain.pagination.Pagination
 import com.example.bookmanagementapi.domain.service.DomainValidationService
 import com.example.bookmanagementapi.domain.queryservice.BookQueryRepository
+import com.example.bookmanagementapi.presentation.book.BookFields
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -20,7 +21,7 @@ class GetBooksByAuthorUsecase(
     @Transactional(readOnly = true)
     fun execute(request: GetBooksByAuthorRequestDto): GetBooksByAuthorResponseDto {
         // 著者IDのバリデーション
-        val authorIdResult = AuthorId.create(request.authorId)
+        val authorIdResult = AuthorId.createWithFieldName(request.authorId, BookFields.AUTHOR_ID)
         // ページ番号のバリデーション
         val pageNumberResult = PageNumber.create(request.pageNumber)
         // ページサイズのバリデーション

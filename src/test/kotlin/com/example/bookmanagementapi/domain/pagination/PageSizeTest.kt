@@ -46,7 +46,7 @@ class PageSizeTest {
             fun lessThanOne(value: Int) {
                 val result = PageSize.create(value)
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.PAGE_SIZE_MUST_BE_BETWEEN_ONE_AND_NINETY_NINE, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.MUST_BE_BETWEEN_ONE_AND_NINETY_NINE, (result as ValidationResult.Failure).error.message)
             }
 
             @ParameterizedTest
@@ -55,7 +55,7 @@ class PageSizeTest {
             fun greaterThanOrEqualTo100(value: Int) {
                 val result = PageSize.create(value)
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.PAGE_SIZE_MUST_BE_BETWEEN_ONE_AND_NINETY_NINE, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.MUST_BE_BETWEEN_ONE_AND_NINETY_NINE, (result as ValidationResult.Failure).error.message)
             }
         }
     }

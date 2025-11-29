@@ -27,7 +27,7 @@ data class BirthDate private constructor(val value: LocalDate) {
             }
             
             if (!parsedDate.isBefore(LocalDate.now())) {
-                return ValidationResult.Failure(ValidationError(AuthorFields.BIRTH_DATE, ValidationMessages.BIRTH_DATE_MUST_BE_PAST))
+                return ValidationResult.Failure(ValidationError(AuthorFields.BIRTH_DATE, ValidationMessages.MUST_BE_PAST))
             }
             
             return ValidationResult.Success(BirthDate(parsedDate))

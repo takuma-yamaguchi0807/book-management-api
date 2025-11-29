@@ -182,7 +182,7 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("著者IDは1以上である必要があります", exception.errors["id"])
+            assertEquals("1以上である必要があります", exception.errors["id"])
         }
 
         @Test
@@ -223,7 +223,7 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("価格は0円以上である必要があります", exception.errors["price"])
+            assertEquals("0以上である必要があります", exception.errors["price"])
         }
 
         @Test
@@ -243,7 +243,7 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("著者は1名以上必要です", exception.errors["author_ids"])
+            assertEquals("1件以上必要です", exception.errors["author_ids"])
         }
 
         @Test
@@ -263,7 +263,7 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("著者は1名以上必要です", exception.errors["author_ids"])
+            assertEquals("1件以上必要です", exception.errors["author_ids"])
         }
 
         @Test
@@ -283,7 +283,7 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("著者IDに重複があります", exception.errors["author_ids"])
+            assertEquals("重複があります", exception.errors["author_ids"])
         }
 
         @ParameterizedTest
@@ -304,7 +304,7 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("著者IDは1以上である必要があります", exception.errors["author_ids[0]"])
+            assertEquals("1以上である必要があります", exception.errors["author_ids[0]"])
         }
 
         @Test
@@ -324,8 +324,8 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(2, exception.errors.size)
-            assertEquals("著者IDは1以上である必要があります", exception.errors["author_ids[1]"])
-            assertEquals("著者IDは1以上である必要があります", exception.errors["author_ids[2]"])
+            assertEquals("1以上である必要があります", exception.errors["author_ids[1]"])
+            assertEquals("1以上である必要があります", exception.errors["author_ids[2]"])
         }
 
         @Test
@@ -404,7 +404,7 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("指定されたIDは存在しません", exception.errors["author_ids[0]"])
+            assertEquals("存在しません", exception.errors["author_ids[0]"])
         }
 
         @Test
@@ -439,8 +439,8 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(2, exception.errors.size)
-            assertEquals("指定されたIDは存在しません", exception.errors["author_ids[1]"])
-            assertEquals("指定されたIDは存在しません", exception.errors["author_ids[2]"])
+            assertEquals("存在しません", exception.errors["author_ids[1]"])
+            assertEquals("存在しません", exception.errors["author_ids[2]"])
         }
     }
 }

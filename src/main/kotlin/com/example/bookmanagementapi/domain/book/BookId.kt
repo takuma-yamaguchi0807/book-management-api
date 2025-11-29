@@ -18,7 +18,7 @@ data class BookId private constructor(val value: Long) {
                 return ValidationResult.Failure(ValidationError(BookFields.ID, ValidationMessages.REQUIRED))
             }
             if (value <= 0) {
-                return ValidationResult.Failure(ValidationError(BookFields.ID, ValidationMessages.AUTHOR_ID_MUST_BE_POSITIVE))
+                return ValidationResult.Failure(ValidationError(BookFields.ID, ValidationMessages.MUST_BE_POSITIVE))
             }
             return ValidationResult.Success(BookId(value))
         }

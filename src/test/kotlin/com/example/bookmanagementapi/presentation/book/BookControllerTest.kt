@@ -95,7 +95,7 @@ class BookControllerTest {
                 // when & then
                 mockMvc.perform(
                     get("/api/v1/books")
-                        .param("authorId", authorId.toString())
+                        .param("author_id", authorId.toString())
                         .param("page_number", "1")
                         .param("page_size", "20")
                 )
@@ -136,7 +136,7 @@ class BookControllerTest {
                 // when & then
                 mockMvc.perform(
                     get("/api/v1/books")
-                        .param("authorId", authorId.toString())
+                        .param("author_id", authorId.toString())
                 )
                     .andExpect(status().isOk)
                     .andExpect(jsonPath("$.items").isEmpty)

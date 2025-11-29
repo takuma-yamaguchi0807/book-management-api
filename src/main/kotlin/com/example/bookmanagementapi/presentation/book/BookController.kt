@@ -31,7 +31,7 @@ class BookController(
 ) {
     @GetMapping
     fun getBooks(
-        @RequestParam authorId: Long,
+        @RequestParam(name = BookFields.AUTHOR_ID) authorId: Long,
         @RequestParam(name = CommonFields.PAGE_NUMBER, defaultValue = "1") pageNumber: Int,
         @RequestParam(name = CommonFields.PAGE_SIZE, defaultValue = "20") pageSize: Int
     ): ResponseEntity<BookListResponse> {

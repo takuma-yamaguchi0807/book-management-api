@@ -3,6 +3,7 @@ package com.example.bookmanagementapi.domain.pagination
 import com.example.bookmanagementapi.domain.ValidationResult
 import com.example.bookmanagementapi.domain.exception.ValidationError
 import com.example.bookmanagementapi.domain.message.ValidationMessages
+import com.example.bookmanagementapi.presentation.shared.CommonFields
 
 /**
  * ページ番号の値オブジェクト
@@ -14,10 +15,10 @@ data class PageNumber(val value: Int) {
          */
         fun create(value: Int?): ValidationResult<PageNumber> {
             if (value == null) {
-                return ValidationResult.Failure(ValidationError("page_number", ValidationMessages.REQUIRED))
+                return ValidationResult.Failure(ValidationError(CommonFields.PAGE_NUMBER, ValidationMessages.REQUIRED))
             }
             if (value < 1) {
-                return ValidationResult.Failure(ValidationError("page_number", ValidationMessages.PAGE_NUMBER_MUST_BE_AT_LEAST_ONE))
+                return ValidationResult.Failure(ValidationError(CommonFields.PAGE_NUMBER, ValidationMessages.MUST_BE_POSITIVE))
             }
             return ValidationResult.Success(PageNumber(value))
         }

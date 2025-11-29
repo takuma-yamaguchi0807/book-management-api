@@ -57,7 +57,7 @@ class BirthDateTest {
                 val futureDate = LocalDate.now().plusDays(1).toString()
                 val result = BirthDate.create(futureDate)
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.BIRTH_DATE_MUST_BE_PAST, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.MUST_BE_PAST, (result as ValidationResult.Failure).error.message)
             }
 
             @Test
@@ -66,7 +66,7 @@ class BirthDateTest {
                 val currentDate = LocalDate.now().toString()
                 val result = BirthDate.create(currentDate)
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.BIRTH_DATE_MUST_BE_PAST, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.MUST_BE_PAST, (result as ValidationResult.Failure).error.message)
             }
         }
     }

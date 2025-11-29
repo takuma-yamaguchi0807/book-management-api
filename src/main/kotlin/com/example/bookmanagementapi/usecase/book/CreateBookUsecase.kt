@@ -72,12 +72,12 @@ class CreateBookUsecase(
      */
     private fun validateAuthorIds(authorIds: List<Long>?): ValidationResult<List<AuthorId>> {
         if (authorIds == null || authorIds.isEmpty()) {
-            return ValidationResult.Failure(ValidationError(BookFields.AUTHOR_IDS, ValidationMessages.AUTHOR_IDS_MUST_HAVE_AT_LEAST_ONE))
+            return ValidationResult.Failure(ValidationError(BookFields.AUTHOR_IDS, ValidationMessages.MUST_HAVE_AT_LEAST_ONE))
         }
         
         // 重複チェック
         if (authorIds.size != authorIds.toSet().size) {
-            return ValidationResult.Failure(ValidationError(BookFields.AUTHOR_IDS, ValidationMessages.AUTHOR_IDS_DUPLICATE))
+            return ValidationResult.Failure(ValidationError(BookFields.AUTHOR_IDS, ValidationMessages.DUPLICATE))
         }
         
         // 各要素をAuthorIdに変換
@@ -85,7 +85,7 @@ class CreateBookUsecase(
         val errors = mutableMapOf<String, String>()
         
         authorIds.forEachIndexed { index, authorIdValue ->
-            val authorIdResult = AuthorId.create(authorIdValue)
+            val authorIdResult = AuthorId.createWithFieldName(authorIdValue, BookFields.AUTHOR_IDS)
             when (authorIdResult) {
                 is ValidationResult.Success -> {
                     validatedAuthorIds.add(authorIdResult.value)

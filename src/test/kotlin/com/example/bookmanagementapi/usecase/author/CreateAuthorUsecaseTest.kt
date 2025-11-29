@@ -125,7 +125,7 @@ class CreateAuthorUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("生年月日は現在より過去である必要があります", exception.errors["birth_date"])
+            assertEquals("現在より過去である必要があります", exception.errors["birth_date"])
         }
 
         @Test
