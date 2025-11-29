@@ -8,8 +8,8 @@ CREATE TABLE books (
 );
 
 CREATE TABLE books_authors (
-    book_id   BIGINT NOT NULL REFERENCES books(id),
     author_id BIGINT NOT NULL REFERENCES authors(id),
-    PRIMARY KEY (book_id, author_id)
+    book_id   BIGINT NOT NULL REFERENCES books(id),
+    PRIMARY KEY (author_id, book_id)
 );
 

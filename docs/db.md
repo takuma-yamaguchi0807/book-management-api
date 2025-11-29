@@ -51,9 +51,9 @@ CREATE TABLE books (
 
 ```sql
 CREATE TABLE books_authors (
-    book_id   BIGINT NOT NULL REFERENCES books(id),
     author_id BIGINT NOT NULL REFERENCES authors(id),
-    PRIMARY KEY (book_id, author_id)
+    book_id   BIGINT NOT NULL REFERENCES books(id),
+    PRIMARY KEY (author_id, book_id)
 );
 ```
 
@@ -91,8 +91,8 @@ CREATE TABLE books_authors (
 
 - 書籍と著者は多対多の関係を持つため、その関係を正規化して表現する中間テーブルを定義。
 - テーブル名は `books_authors` とし、両者のテーブル名の複数形を結合することで、「中間テーブル」であることが直感的に分かるように命名している。
-- `(book_id, author_id)` の複合主キーとすることで、同一の組み合わせでの重複登録を防ぎ、  
-  データ整合性を簡潔に保っている。
+- `(author_id, book_id)` の複合主キーとすることで、同一の組み合わせでの重複登録を防ぎ、  
+  データ整合性を簡潔に保っている。`author_id` を先頭にすることで、著者 ID での検索（主要なクエリパターン）が効率的になる。
 - 外部キー制約により `books` / `authors` 両テーブルとの整合性を強制している。
 
 ---

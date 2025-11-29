@@ -108,7 +108,7 @@ class AuthorControllerTest {
                     name = "山田太郎",
                     birthDate = "2100-01-01"
                 )
-                val errors = mapOf("birth_date" to "現在より過去である必要があります")
+                val errors = mapOf("birth_date" to "現在日より過去日である必要があります")
                 
                 given(createAuthorUsecase.execute(any()))
                     .willThrow(DomainValidationException(errors))
@@ -122,7 +122,7 @@ class AuthorControllerTest {
                     .andExpect(status().isBadRequest)
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
-                    .andExpect(jsonPath("$.details.birth_date").value("現在より過去である必要があります"))
+                    .andExpect(jsonPath("$.details.birth_date").value("現在日より過去日である必要があります"))
             }
 
             @Test
@@ -229,7 +229,7 @@ class AuthorControllerTest {
                     name = "山田太郎",
                     birthDate = "2100-01-01"
                 )
-                val errors = mapOf("birth_date" to "現在より過去である必要があります")
+                val errors = mapOf("birth_date" to "現在日より過去日である必要があります")
                 
                 given(updateAuthorUsecase.execute(any(), any()))
                     .willThrow(DomainValidationException(errors))
@@ -243,7 +243,7 @@ class AuthorControllerTest {
                     .andExpect(status().isBadRequest)
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
-                    .andExpect(jsonPath("$.details.birth_date").value("現在より過去である必要があります"))
+                    .andExpect(jsonPath("$.details.birth_date").value("現在日より過去日である必要があります"))
             }
 
             @Test

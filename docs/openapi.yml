@@ -59,7 +59,7 @@ paths:
                   value:
                     code: "VALIDATION_ERROR"
                     details:
-                      birth_date: "現在より過去である必要があります"
+                      birth_date: "現在日より過去日である必要があります"
                 example3:
                   summary: リクエストボディが不正な例
                   value:
@@ -127,7 +127,7 @@ paths:
                   value:
                     code: "VALIDATION_ERROR"
                     details:
-                      birth_date: "現在より過去である必要があります"
+                      birth_date: "現在日より過去日である必要があります"
                 example3:
                   summary: リクエストボディが不正な例
                   value:
@@ -714,7 +714,7 @@ components:
             通常フィールドは文字列、配列フィールドはネスト構造（例: `author_ids: { "0": "存在しません" }`）として返される。
           example:
             name: "必須フィールドが不足しています"
-            birth_date: "現在より過去である必要があります"
+            birth_date: "現在日より過去日である必要があります"
             author_ids:
               "0": "存在しません"
               "1": "存在しません"
