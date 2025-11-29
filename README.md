@@ -128,6 +128,45 @@ gradlew.bat bootRun
 
 API 仕様は `docs/openapi.yml` を参照してください。
 
+## トラブルシューティング
+
+### Flyway のチェックサム不一致エラー
+
+アプリケーション起動時に以下のようなエラーが発生した場合:
+
+```
+Migration checksum mismatch for migration version X
+-> Applied to database : XXXXX
+-> Resolved locally    : XXXXX
+```
+
+これは、データベースに適用済みのマイグレーションファイルとローカルのマイグレーションファイルの内容が異なるために発生します。
+
+**対処方法: データベースをリセットして再マイグレーション**
+
+開発環境の場合、以下の手順でデータベースをリセットして再マイグレーションを実行します:
+
+```bash
+# Docker Compose を停止してボリュームも削除
+docker compose down -v
+
+# 再度起動
+docker compose up -d
+
+# アプリケーションを起動（マイグレーションが自動実行される）
+./gradlew bootRun
+```
+
+Windows の場合:
+
+```bash
+docker compose down -v
+docker compose up -d
+gradlew.bat bootRun
+```
+
+**注意**: この操作により、データベース内のすべてのデータが削除されます。開発環境以外では使用しないでください。
+
 ## ビルド
 
 ```bash
