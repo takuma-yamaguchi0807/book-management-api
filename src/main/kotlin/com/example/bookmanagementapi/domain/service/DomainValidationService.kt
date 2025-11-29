@@ -32,10 +32,8 @@ object DomainValidationService {
                             val fieldName = arrayMatch.groupValues[1]
                             val index = arrayMatch.groupValues[2]
                             
-                            if (!arrayFieldGroups.containsKey(fieldName)) {
-                                arrayFieldGroups[fieldName] = mutableMapOf()
-                            }
-                            arrayFieldGroups[fieldName]!![index] = error.message
+                            val indexMap = arrayFieldGroups.getOrPut(fieldName) { mutableMapOf() }
+                            indexMap[index] = error.message
                         } else {
                             // 通常のフィールドはそのまま
                             errors[error.field] = error.message

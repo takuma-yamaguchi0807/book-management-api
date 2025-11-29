@@ -125,7 +125,7 @@ class UpdateBookUsecase(
      */
     private fun validateAuthorIdsExist(authorIds: List<AuthorId>) {
         val foundAuthors = authorRepository.findByIds(authorIds)
-        val foundAuthorIds = foundAuthors.map { it.id!!.value }.toSet()
+        val foundAuthorIds = foundAuthors.mapNotNull { it.id?.value }.toSet()
         
         val authorIdsErrors = mutableMapOf<String, String>()
         authorIds.forEachIndexed { index, authorId ->
