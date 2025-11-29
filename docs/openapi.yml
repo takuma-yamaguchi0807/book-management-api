@@ -460,7 +460,8 @@ paths:
                   value:
                     code: "BUSINESS_RULE_VIOLATION"
                     details:
-                      "author_ids[1]": "存在しません"
+                      author_ids:
+                        "1": "存在しません"
         "404":
           description: 指定されたリソースが見つかりません
           content:
@@ -707,12 +708,16 @@ components:
           example: "VALIDATION_ERROR"
         details:
           type: object
-          additionalProperties:
-            type: string
-          description: フィールド名をキーとし、エラーメッセージを値とするオブジェクト
+          additionalProperties: true
+          description: |
+            フィールド名をキーとし、エラーメッセージまたはネスト構造を値とするオブジェクト。
+            通常フィールドは文字列、配列フィールドはネスト構造（例: `author_ids: { "0": "存在しません" }`）として返される。
           example:
             name: "必須フィールドが不足しています"
             birth_date: "現在より過去である必要があります"
+            author_ids:
+              "0": "存在しません"
+              "1": "存在しません"
       required:
         - code
         - details
