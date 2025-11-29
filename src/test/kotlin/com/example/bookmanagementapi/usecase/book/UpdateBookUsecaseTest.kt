@@ -371,14 +371,16 @@ class UpdateBookUsecaseTest {
             given(bookRepository.findById(any())).willReturn(existingBook)
 
             // when & then
-            assertThrows(BusinessRuleViolationException::class.java) {
+            val exception = assertThrows(BusinessRuleViolationException::class.java) {
                 usecase.execute(bookId, request)
             }
+            assertEquals(1, exception.errors.size)
+            assertEquals("出版済みの書籍を未出版に変更することはできません", exception.errors.get("published"))
             verify(bookRepository).findById(any())
         }
 
         @Test
-        @DisplayName("著者IDが存在しない場合、DomainValidationExceptionがスローされること")
+        @DisplayName("著者IDが存在しない場合、BusinessRuleViolationExceptionがスローされること")
         fun updateBook_authorIdNotFound() {
             // given
             val bookId = 1L
@@ -400,11 +402,11 @@ class UpdateBookUsecaseTest {
             given(authorRepository.findByIds(any())).willReturn(emptyList())
 
             // when & then
-            val exception = assertThrows(DomainValidationException::class.java) {
+            val exception = assertThrows(BusinessRuleViolationException::class.java) {
                 usecase.execute(bookId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("存在しません", exception.errors["author_ids[0]"])
+            assertEquals("存在しません", exception.errors.get("author_ids[0]"))
         }
 
         @Test
@@ -435,12 +437,12 @@ class UpdateBookUsecaseTest {
             given(authorRepository.findByIds(any())).willReturn(listOf(existingAuthor))
 
             // when & then
-            val exception = assertThrows(DomainValidationException::class.java) {
+            val exception = assertThrows(BusinessRuleViolationException::class.java) {
                 usecase.execute(bookId, request)
             }
             assertEquals(2, exception.errors.size)
-            assertEquals("存在しません", exception.errors["author_ids[1]"])
-            assertEquals("存在しません", exception.errors["author_ids[2]"])
+            assertEquals("存在しません", exception.errors.get("author_ids[1]"))
+            assertEquals("存在しません", exception.errors.get("author_ids[2]"))
         }
     }
 }

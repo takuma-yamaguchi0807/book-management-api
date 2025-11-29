@@ -8,6 +8,7 @@ import com.example.bookmanagementapi.domain.author.BirthDate
 import com.example.bookmanagementapi.domain.book.BookAuthorRepository
 import com.example.bookmanagementapi.domain.book.BookId
 import com.example.bookmanagementapi.domain.book.BookRepository
+import com.example.bookmanagementapi.domain.exception.BusinessRuleViolationException
 import com.example.bookmanagementapi.domain.exception.DomainValidationException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -212,7 +213,7 @@ class CreateBookUsecaseTest {
         }
 
         @Test
-        @DisplayName("著者IDが存在しない場合、DomainValidationExceptionがスローされること")
+        @DisplayName("著者IDが存在しない場合、BusinessRuleViolationExceptionがスローされること")
         fun createBook_authorIdNotFound() {
             // given
             val request = CreateBookRequestDto(
@@ -225,11 +226,11 @@ class CreateBookUsecaseTest {
             given(authorRepository.findByIds(any())).willReturn(emptyList())
 
             // when & then
-            val exception = assertThrows(DomainValidationException::class.java) {
+            val exception = assertThrows(BusinessRuleViolationException::class.java) {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("存在しません", exception.errors["author_ids[0]"])
+            assertEquals("存在しません", exception.errors.get("author_ids[0]"))
         }
 
         @Test
@@ -251,12 +252,12 @@ class CreateBookUsecaseTest {
             given(authorRepository.findByIds(any())).willReturn(listOf(existingAuthor))
 
             // when & then
-            val exception = assertThrows(DomainValidationException::class.java) {
+            val exception = assertThrows(BusinessRuleViolationException::class.java) {
                 usecase.execute(request)
             }
             assertEquals(2, exception.errors.size)
-            assertEquals("存在しません", exception.errors["author_ids[1]"])
-            assertEquals("存在しません", exception.errors["author_ids[2]"])
+            assertEquals("存在しません", exception.errors.get("author_ids[1]"))
+            assertEquals("存在しません", exception.errors.get("author_ids[2]"))
         }
 
         @ParameterizedTest

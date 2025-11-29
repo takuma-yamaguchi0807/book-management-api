@@ -55,7 +55,9 @@ class UpdateBookUsecase(
         
         // ビジネスルールチェック: 出版済み→未出版への変更は不可
         if (existingBook.publishedStatus.value && !publishedStatus.value) {
-            throw BusinessRuleViolationException(ErrorMessages.BUSINESS_RULE_VIOLATION_PUBLISHED_TO_UNPUBLISHED)
+            throw BusinessRuleViolationException(
+                mapOf(BookFields.PUBLISHED to ErrorMessages.BUSINESS_RULE_VIOLATION_PUBLISHED_TO_UNPUBLISHED)
+            )
         }
         
         // 著者IDの存在チェック
@@ -131,7 +133,7 @@ class UpdateBookUsecase(
         }
         
         if (errors.isNotEmpty()) {
-            throw DomainValidationException(errors)
+            throw BusinessRuleViolationException(errors)
         }
     }
 }

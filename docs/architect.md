@@ -117,8 +117,9 @@
   - リクエストの形式は正しいが、セマンティックエラー（参照先リソースが存在しない）
   - WebDAV の拡張だが、REST API で広く使用されている
   - バリデーションエラー（400）とは区別したい
+  - `BUSINESS_RULE_VIOLATION` コードで区別し、`ValidationErrorResponse` 形式（details）で返す
 - **トレードオフ**:
-  - 400 を使うとバリデーションエラーと区別がつかない
+  - 400 入力値だけで判定できないため
   - 404 は意味合い的にはエンドポイントのリソースに対してなので、異なると判断。
 
 ---
@@ -151,13 +152,14 @@
 - **検討した選択肢**:
   1. 400 Bad Request
   2. 422 Unprocessable Entity
-- **選択**: 案 1
-- **理由**: ビジネスルール違反として 400 で返す。`BUSINESS_RULE_VIOLATION` コードで区別
-- **トレードオフ**: 422 を使うとセマンティックエラーとして区別できるが、ビジネスルール違反は 400 で統一
+- **選択**: 案 2
+- **理由**: リクエストの形式は正しいが、セマンティックエラー（ビジネスルール違反）として 422 で返す。`BUSINESS_RULE_VIOLATION` コードで区別し、`ValidationErrorResponse` 形式（details）で返す
+- **トレードオフ**: 400 を使うとバリデーションエラーと区別がつかないが、422 を使うことでセマンティックエラーとして明確に区別できる
 
 #### エラーレスポンス: 著者 ID が存在しない場合
 
 - **選択**: POST /books と同様（422）
+- **理由**: リクエストの形式は正しいが、セマンティックエラー（参照先リソースが存在しない）として 422 で返す。`BUSINESS_RULE_VIOLATION` コードで区別し、`ValidationErrorResponse` 形式（details）で返す
 
 ---
 
@@ -269,6 +271,7 @@
 - **選択**: 案 1
 - **理由**: 機能要件を確認した結果、1 つのフィールドで複数のエラーメッセージが必要なケースは想定しにくい
 - **トレードオフ**: 将来的に複数メッセージが必要になった場合、形式を変更する必要がある
+- **実装**: 400 と 422 の両方で `ValidationErrorResponse` 形式（`code` + `details`）を使用する。422 の場合は `BUSINESS_RULE_VIOLATION` コードを使用する
 
 #### 配列内の特定要素に対するエラー: `authorIds[1]` 形式
 
@@ -281,10 +284,10 @@
 
 ### エラーコード
 
-- `VALIDATION_ERROR`: バリデーションエラー
-- `INVALID_REQUEST`: リクエストボディが不正
-- `RESOURCE_NOT_FOUND`: 参照先リソースが存在しない（422 エラー）
-- `BUSINESS_RULE_VIOLATION`: ビジネスルール違反
-- `AUTHOR_NOT_FOUND`: 著者が存在しない（404 エラー）
-- `BOOK_NOT_FOUND`: 書籍が存在しない（404 エラー）
-- `INTERNAL_SERVER_ERROR`: サーバー内部エラー
+- `VALIDATION_ERROR`: バリデーションエラー（400 エラー、`ValidationErrorResponse` 形式）
+- `INVALID_REQUEST`: リクエストボディが不正（400 エラー、`ErrorResponse` 形式）
+- `RESOURCE_NOT_FOUND`: 参照先リソースが存在しない（404 エラー、`ErrorResponse` 形式）
+- `BUSINESS_RULE_VIOLATION`: ビジネスルール違反（422 エラー、`ValidationErrorResponse` 形式）
+- `AUTHOR_NOT_FOUND`: 著者が存在しない（404 エラー、`ErrorResponse` 形式）
+- `BOOK_NOT_FOUND`: 書籍が存在しない（404 エラー、`ErrorResponse` 形式）
+- `INTERNAL_SERVER_ERROR`: サーバー内部エラー（500 エラー、`ErrorResponse` 形式）

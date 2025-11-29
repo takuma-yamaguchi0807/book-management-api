@@ -2,8 +2,9 @@ package com.example.bookmanagementapi.domain.exception
 
 /**
  * ビジネスルール違反の例外
+ * ValidationErrorResponse形式（details）で返す
  */
 class BusinessRuleViolationException(
-    message: String
-) : RuntimeException(message)
+    val errors: Map<String, String>
+) : RuntimeException("Business rule violation: $errors")
 

@@ -326,7 +326,9 @@ class BookControllerTest {
                 )
                 
                 given(updateBookUsecase.execute(any(), any()))
-                    .willThrow(BusinessRuleViolationException("出版済みの書籍を未出版に変更することはできません"))
+                    .willThrow(BusinessRuleViolationException(
+                        mapOf("published" to "出版済みの書籍を未出版に変更することはできません")
+                    ))
 
                 // when & then
                 mockMvc.perform(
@@ -337,7 +339,7 @@ class BookControllerTest {
                     .andExpect(status().isUnprocessableEntity)
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.code").value("BUSINESS_RULE_VIOLATION"))
-                    .andExpect(jsonPath("$.message").value("出版済みの書籍を未出版に変更することはできません"))
+                    .andExpect(jsonPath("$.details.published").value("出版済みの書籍を未出版に変更することはできません"))
             }
         }
     }

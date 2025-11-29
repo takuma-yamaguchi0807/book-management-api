@@ -346,16 +346,23 @@ paths:
                     details:
                       author_ids: "1件以上必要です"
                 example4:
-                  summary: 著者IDが存在しない例
-                  value:
-                    code: "VALIDATION_ERROR"
-                    details:
-                      "author_ids[1]": "存在しません"
-                example5:
                   summary: リクエストボディが不正な例
                   value:
                     code: "INVALID_REQUEST"
                     message: "JSON parse error: Unexpected character..."
+        "422":
+          description: リクエストは正しい形式ですが、セマンティックエラーがあります
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+              examples:
+                example1:
+                  summary: 著者IDが存在しない例
+                  value:
+                    code: "BUSINESS_RULE_VIOLATION"
+                    details:
+                      "author_ids[1]": "存在しません"
         "500":
           description: サーバー内部エラー
           content:
@@ -430,12 +437,6 @@ paths:
                     details:
                       author_ids: "1件以上必要です"
                 example4:
-                  summary: 著者IDが存在しない例
-                  value:
-                    code: "VALIDATION_ERROR"
-                    details:
-                      "author_ids[1]": "存在しません"
-                example5:
                   summary: リクエストボディが不正な例
                   value:
                     code: "INVALID_REQUEST"
@@ -445,13 +446,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: "#/components/schemas/ValidationErrorResponse"
               examples:
                 example1:
                   summary: 出版済み→未出版への変更不可の例
                   value:
                     code: "BUSINESS_RULE_VIOLATION"
-                    message: "出版済みの書籍を未出版に変更することはできません"
+                    details:
+                      published: "出版済みの書籍を未出版に変更することはできません"
+                example2:
+                  summary: 著者IDが存在しない例
+                  value:
+                    code: "BUSINESS_RULE_VIOLATION"
+                    details:
+                      "author_ids[1]": "存在しません"
         "404":
           description: 指定されたリソースが見つかりません
           content:

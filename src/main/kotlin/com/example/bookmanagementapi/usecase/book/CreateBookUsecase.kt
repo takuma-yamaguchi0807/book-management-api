@@ -9,6 +9,7 @@ import com.example.bookmanagementapi.domain.book.BookRepository
 import com.example.bookmanagementapi.domain.book.Price
 import com.example.bookmanagementapi.domain.book.PublishedStatus
 import com.example.bookmanagementapi.domain.book.Title
+import com.example.bookmanagementapi.domain.exception.BusinessRuleViolationException
 import com.example.bookmanagementapi.domain.exception.DomainValidationException
 import com.example.bookmanagementapi.domain.exception.ResourceNotFoundException
 import com.example.bookmanagementapi.domain.exception.ValidationError
@@ -119,7 +120,7 @@ class CreateBookUsecase(
         }
         
         if (errors.isNotEmpty()) {
-            throw DomainValidationException(errors)
+            throw BusinessRuleViolationException(errors)
         }
     }
 }

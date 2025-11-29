@@ -43,12 +43,14 @@ class GlobalExceptionHandler {
 
     /**
      * ビジネスルール違反のエラーを処理
+     * errorsが指定された場合はValidationErrorResponse形式（details）で返す
+     * errorsが指定されない場合はErrorResponse形式（message）で返す
      */
     @ExceptionHandler(BusinessRuleViolationException::class)
-    fun handleBusinessRuleViolationException(e: BusinessRuleViolationException): ResponseEntity<ErrorResponse> {
-        val response = ErrorResponse(
+    fun handleBusinessRuleViolationException(e: BusinessRuleViolationException): ResponseEntity<ValidationErrorResponse> {
+        val response = ValidationErrorResponse(
             code = "BUSINESS_RULE_VIOLATION",
-            message = e.message ?: "ビジネスルール違反が発生しました"
+            details = e.errors
         )
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response)
     }
