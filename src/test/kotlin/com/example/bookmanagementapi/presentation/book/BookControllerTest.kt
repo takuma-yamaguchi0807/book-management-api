@@ -149,13 +149,60 @@ class BookControllerTest {
         @DisplayName("異常系")
         inner class Abnormal {
             @Test
-            @DisplayName("authorIdパラメータが欠如している場合、400 Bad Requestが返されること")
+            @DisplayName("authorIdパラメータが欠如している場合、400 Bad RequestとValidationErrorResponseが返されること")
             fun getBooks_missingAuthorId() {
                 // when & then
                 mockMvc.perform(
                     get("/api/v1/books")
                 )
                     .andExpect(status().isBadRequest)
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                    .andExpect(jsonPath("$.details.author_id").value("入力してください"))
+            }
+
+            @Test
+            @DisplayName("ページ番号が0以下の場合、400 Bad Requestが返されること")
+            fun getBooks_invalidPageNumber() {
+                // given
+                val authorId = 1L
+                val errors = mapOf("page_number" to "1以上である必要があります")
+                
+                given(getBooksByAuthorUsecase.execute(any()))
+                    .willThrow(DomainValidationException(errors))
+
+                // when & then
+                mockMvc.perform(
+                    get("/api/v1/books")
+                        .param("author_id", authorId.toString())
+                        .param("page_number", "0")
+                )
+                    .andExpect(status().isBadRequest)
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                    .andExpect(jsonPath("$.details.page_number").value("1以上である必要があります"))
+            }
+
+            @Test
+            @DisplayName("ページサイズが範囲外の場合、400 Bad Requestが返されること")
+            fun getBooks_invalidPageSize() {
+                // given
+                val authorId = 1L
+                val errors = mapOf("page_size" to "1以上100未満である必要があります")
+                
+                given(getBooksByAuthorUsecase.execute(any()))
+                    .willThrow(DomainValidationException(errors))
+
+                // when & then
+                mockMvc.perform(
+                    get("/api/v1/books")
+                        .param("author_id", authorId.toString())
+                        .param("page_size", "100")
+                )
+                    .andExpect(status().isBadRequest)
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                    .andExpect(jsonPath("$.details.page_size").value("1以上100未満である必要があります"))
             }
         }
     }
@@ -198,8 +245,8 @@ class BookControllerTest {
         @DisplayName("異常系")
         inner class Abnormal {
             @Test
-            @DisplayName("バリデーションエラーの場合、400 Bad Requestが返されること")
-            fun createBook_validationError() {
+            @DisplayName("必須項目が欠如している場合、400 Bad Requestが返されること")
+            fun createBook_missingRequiredFields() {
                 // given
                 val request = CreateBookRequest(
                     title = null,
@@ -222,6 +269,99 @@ class BookControllerTest {
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
                     .andExpect(jsonPath("$.details.title").value("入力してください"))
+            }
+
+            @Test
+            @DisplayName("価格が0未満の場合、400 Bad Requestが返されること")
+            fun createBook_negativePrice() {
+                // given
+                val request = CreateBookRequest(
+                    title = "プログラミング入門",
+                    price = -1,
+                    authorIds = listOf(1L),
+                    published = true
+                )
+                val errors = mapOf("price" to "0以上である必要があります")
+                
+                given(createBookUsecase.execute(any()))
+                    .willThrow(DomainValidationException(errors))
+
+                // when & then
+                mockMvc.perform(
+                    post("/api/v1/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                )
+                    .andExpect(status().isBadRequest)
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                    .andExpect(jsonPath("$.details.price").value("0以上である必要があります"))
+            }
+
+            @Test
+            @DisplayName("著者IDが空配列の場合、400 Bad Requestが返されること")
+            fun createBook_emptyAuthorIds() {
+                // given
+                val request = CreateBookRequest(
+                    title = "プログラミング入門",
+                    price = 1980,
+                    authorIds = emptyList(),
+                    published = true
+                )
+                val errors = mapOf("author_ids" to "1件以上必要です")
+                
+                given(createBookUsecase.execute(any()))
+                    .willThrow(DomainValidationException(errors))
+
+                // when & then
+                mockMvc.perform(
+                    post("/api/v1/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                )
+                    .andExpect(status().isBadRequest)
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                    .andExpect(jsonPath("$.details.author_ids").value("1件以上必要です"))
+            }
+
+            @Test
+            @DisplayName("リクエストボディが不正な場合、400 Bad Requestが返されること")
+            fun createBook_invalidRequestBody() {
+                // when & then
+                mockMvc.perform(
+                    post("/api/v1/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{ invalid json }")
+                )
+                    .andExpect(status().isBadRequest)
+            }
+
+            @Test
+            @DisplayName("著者IDが存在しない場合、422 Unprocessable Entityが返されること")
+            fun createBook_authorNotFound() {
+                // given
+                val request = CreateBookRequest(
+                    title = "プログラミング入門",
+                    price = 1980,
+                    authorIds = listOf(999L),
+                    published = true
+                )
+                val errors = mapOf<String, Any>("author_ids" to mapOf("0" to "存在しません"))
+                
+                given(createBookUsecase.execute(any()))
+                    .willThrow(BusinessRuleViolationException(errors))
+
+                // when & then
+                mockMvc.perform(
+                    post("/api/v1/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                )
+                    .andExpect(status().isUnprocessableEntity)
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.code").value("BUSINESS_RULE_VIOLATION"))
+                    .andExpect(jsonPath("$.details.author_ids['0']").value("存在しません"))
             }
         }
     }
@@ -286,8 +426,8 @@ class BookControllerTest {
             }
 
             @Test
-            @DisplayName("バリデーションエラーの場合、400 Bad Requestが返されること")
-            fun updateBook_validationError() {
+            @DisplayName("必須項目が欠如している場合、400 Bad Requestが返されること")
+            fun updateBook_missingRequiredFields() {
                 // given
                 val bookId = 1L
                 val request = UpdateBookRequest(
@@ -314,8 +454,79 @@ class BookControllerTest {
             }
 
             @Test
-            @DisplayName("ビジネスルール違反の場合、422 Unprocessable Entityが返されること")
-            fun updateBook_businessRuleViolation() {
+            @DisplayName("価格が0未満の場合、400 Bad Requestが返されること")
+            fun updateBook_negativePrice() {
+                // given
+                val bookId = 1L
+                val request = UpdateBookRequest(
+                    title = "プログラミング入門",
+                    price = -1,
+                    authorIds = listOf(1L),
+                    published = true
+                )
+                val errors = mapOf("price" to "0以上である必要があります")
+                
+                given(updateBookUsecase.execute(any(), any()))
+                    .willThrow(DomainValidationException(errors))
+
+                // when & then
+                mockMvc.perform(
+                    put("/api/v1/books/$bookId")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                )
+                    .andExpect(status().isBadRequest)
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                    .andExpect(jsonPath("$.details.price").value("0以上である必要があります"))
+            }
+
+            @Test
+            @DisplayName("著者IDが空配列の場合、400 Bad Requestが返されること")
+            fun updateBook_emptyAuthorIds() {
+                // given
+                val bookId = 1L
+                val request = UpdateBookRequest(
+                    title = "プログラミング入門",
+                    price = 1980,
+                    authorIds = emptyList(),
+                    published = true
+                )
+                val errors = mapOf("author_ids" to "1件以上必要です")
+                
+                given(updateBookUsecase.execute(any(), any()))
+                    .willThrow(DomainValidationException(errors))
+
+                // when & then
+                mockMvc.perform(
+                    put("/api/v1/books/$bookId")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                )
+                    .andExpect(status().isBadRequest)
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                    .andExpect(jsonPath("$.details.author_ids").value("1件以上必要です"))
+            }
+
+            @Test
+            @DisplayName("リクエストボディが不正な場合、400 Bad Requestが返されること")
+            fun updateBook_invalidRequestBody() {
+                // given
+                val bookId = 1L
+
+                // when & then
+                mockMvc.perform(
+                    put("/api/v1/books/$bookId")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{ invalid json }")
+                )
+                    .andExpect(status().isBadRequest)
+            }
+
+            @Test
+            @DisplayName("ビジネスルール違反（出版済み→未出版）の場合、422 Unprocessable Entityが返されること")
+            fun updateBook_businessRuleViolationPublishedToUnpublished() {
                 // given
                 val bookId = 1L
                 val request = UpdateBookRequest(
@@ -327,7 +538,7 @@ class BookControllerTest {
                 
                 given(updateBookUsecase.execute(any(), any()))
                     .willThrow(BusinessRuleViolationException(
-                        mapOf("published" to "出版済みの書籍を未出版に変更することはできません")
+                        mapOf<String, Any>("published" to "出版済みの書籍を未出版に変更することはできません")
                     ))
 
                 // when & then
@@ -340,6 +551,48 @@ class BookControllerTest {
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.code").value("BUSINESS_RULE_VIOLATION"))
                     .andExpect(jsonPath("$.details.published").value("出版済みの書籍を未出版に変更することはできません"))
+            }
+
+            @Test
+            @DisplayName("著者IDが存在しない場合、422 Unprocessable Entityが返されること")
+            fun updateBook_authorNotFound() {
+                // given
+                val bookId = 1L
+                val request = UpdateBookRequest(
+                    title = "プログラミング入門",
+                    price = 1980,
+                    authorIds = listOf(999L),
+                    published = true
+                )
+                val errors = mapOf<String, Any>("author_ids" to mapOf("0" to "存在しません"))
+                
+                given(updateBookUsecase.execute(any(), any()))
+                    .willThrow(BusinessRuleViolationException(errors))
+
+                // when & then
+                mockMvc.perform(
+                    put("/api/v1/books/$bookId")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                )
+                    .andExpect(status().isUnprocessableEntity)
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.code").value("BUSINESS_RULE_VIOLATION"))
+                    .andExpect(jsonPath("$.details.author_ids['0']").value("存在しません"))
+            }
+
+            @Test
+            @DisplayName("パスパラメータの型が不正な場合、400 Bad Requestが返されること")
+            fun updateBook_invalidPathParameter() {
+                // when & then
+                mockMvc.perform(
+                    put("/api/v1/books/abc")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}")
+                )
+                    .andExpect(status().isBadRequest)
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.code").value("INVALID_REQUEST"))
             }
         }
     }

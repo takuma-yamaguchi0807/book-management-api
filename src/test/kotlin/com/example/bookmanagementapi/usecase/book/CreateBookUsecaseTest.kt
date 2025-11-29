@@ -132,7 +132,7 @@ class CreateBookUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("入力してください", exception.errors["title"])
+            assertEquals("入力してください", exception.errors["title"] as String)
         }
 
         @ParameterizedTest
@@ -152,7 +152,7 @@ class CreateBookUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("0以上である必要があります", exception.errors["price"])
+            assertEquals("0以上である必要があります", exception.errors["price"] as String)
         }
 
         @Test
@@ -171,7 +171,7 @@ class CreateBookUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("1件以上必要です", exception.errors["author_ids"])
+            assertEquals("1件以上必要です", exception.errors["author_ids"] as String)
         }
 
         @Test
@@ -190,7 +190,7 @@ class CreateBookUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("1件以上必要です", exception.errors["author_ids"])
+            assertEquals("1件以上必要です", exception.errors["author_ids"] as String)
         }
 
         @Test
@@ -209,7 +209,7 @@ class CreateBookUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("重複があります", exception.errors["author_ids"])
+            assertEquals("重複があります", exception.errors["author_ids"] as String)
         }
 
         @Test
@@ -230,7 +230,8 @@ class CreateBookUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("存在しません", exception.errors.get("author_ids[0]"))
+            val authorIdsErrors = exception.errors["author_ids"] as Map<String, String>
+            assertEquals("存在しません", authorIdsErrors["0"])
         }
 
         @Test
@@ -255,9 +256,11 @@ class CreateBookUsecaseTest {
             val exception = assertThrows(BusinessRuleViolationException::class.java) {
                 usecase.execute(request)
             }
-            assertEquals(2, exception.errors.size)
-            assertEquals("存在しません", exception.errors.get("author_ids[1]"))
-            assertEquals("存在しません", exception.errors.get("author_ids[2]"))
+            assertEquals(1, exception.errors.size)
+            val authorIdsErrors = exception.errors["author_ids"] as Map<String, String>
+            assertEquals(2, authorIdsErrors.size)
+            assertEquals("存在しません", authorIdsErrors["1"])
+            assertEquals("存在しません", authorIdsErrors["2"])
         }
 
         @ParameterizedTest
@@ -277,7 +280,8 @@ class CreateBookUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("1以上である必要があります", exception.errors["author_ids[0]"])
+            val authorIdsErrors = exception.errors["author_ids"] as Map<String, String>
+            assertEquals("1以上である必要があります", authorIdsErrors["0"])
         }
 
         @Test
@@ -295,9 +299,11 @@ class CreateBookUsecaseTest {
             val exception = assertThrows(DomainValidationException::class.java) {
                 usecase.execute(request)
             }
-            assertEquals(2, exception.errors.size)
-            assertEquals("1以上である必要があります", exception.errors["author_ids[1]"])
-            assertEquals("1以上である必要があります", exception.errors["author_ids[2]"])
+            assertEquals(1, exception.errors.size)
+            val authorIdsErrors = exception.errors["author_ids"] as Map<String, String>
+            assertEquals(2, authorIdsErrors.size)
+            assertEquals("1以上である必要があります", authorIdsErrors["1"])
+            assertEquals("1以上である必要があります", authorIdsErrors["2"])
         }
 
         @Test
@@ -316,7 +322,7 @@ class CreateBookUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("入力してください", exception.errors["published"])
+            assertEquals("入力してください", exception.errors["published"] as String)
         }
     }
 }

@@ -362,7 +362,8 @@ paths:
                   value:
                     code: "BUSINESS_RULE_VIOLATION"
                     details:
-                      "author_ids[1]": "存在しません"
+                      author_ids:
+                        "1": "存在しません"
         "500":
           description: サーバー内部エラー
           content:

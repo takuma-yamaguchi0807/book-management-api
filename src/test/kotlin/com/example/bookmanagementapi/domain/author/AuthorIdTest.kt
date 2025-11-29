@@ -38,7 +38,7 @@ class AuthorIdTest {
             fun nullValue() {
                 val result = AuthorId.create(null)
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.REQUIRED, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.REQUIRED, (result as ValidationResult.Failure).errors[0].message)
             }
 
             @ParameterizedTest
@@ -47,7 +47,7 @@ class AuthorIdTest {
             fun notPositive(value: Long) {
                 val result = AuthorId.create(value)
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.MUST_BE_POSITIVE, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.MUST_BE_POSITIVE, (result as ValidationResult.Failure).errors[0].message)
             }
         }
     }

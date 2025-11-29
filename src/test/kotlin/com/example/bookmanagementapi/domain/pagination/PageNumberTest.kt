@@ -38,7 +38,7 @@ class PageNumberTest {
             fun nullValue() {
                 val result = PageNumber.create(null)
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.REQUIRED, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.REQUIRED, (result as ValidationResult.Failure).errors[0].message)
             }
 
             @ParameterizedTest
@@ -47,7 +47,7 @@ class PageNumberTest {
             fun lessThanOne(value: Int) {
                 val result = PageNumber.create(value)
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.MUST_BE_POSITIVE, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.MUST_BE_POSITIVE, (result as ValidationResult.Failure).errors[0].message)
             }
         }
     }

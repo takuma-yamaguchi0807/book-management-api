@@ -228,7 +228,7 @@ class GetBooksByAuthorUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("1以上である必要があります", exception.errors["author_id"])
+            assertEquals("1以上である必要があります", exception.errors["author_id"] as String)
         }
 
 
@@ -248,7 +248,7 @@ class GetBooksByAuthorUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("1以上である必要があります", exception.errors["page_number"])
+            assertEquals("1以上である必要があります", exception.errors["page_number"] as String)
         }
 
 
@@ -268,7 +268,7 @@ class GetBooksByAuthorUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("1以上100未満である必要があります", exception.errors["page_size"])
+            assertEquals("1以上100未満である必要があります", exception.errors["page_size"] as String)
         }
 
         @ParameterizedTest
@@ -287,7 +287,7 @@ class GetBooksByAuthorUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("1以上100未満である必要があります", exception.errors["page_size"])
+            assertEquals("1以上100未満である必要があります", exception.errors["page_size"] as String)
         }
 
 
@@ -306,9 +306,9 @@ class GetBooksByAuthorUsecaseTest {
                 usecase.execute(request)
             }
             assertEquals(3, exception.errors.size)
-            assertEquals("1以上である必要があります", exception.errors["author_id"])
-            assertEquals("1以上である必要があります", exception.errors["page_number"])
-            assertEquals("1以上100未満である必要があります", exception.errors["page_size"])
+            assertEquals("1以上である必要があります", exception.errors["author_id"] as String)
+            assertEquals("1以上である必要があります", exception.errors["page_number"] as String)
+            assertEquals("1以上100未満である必要があります", exception.errors["page_size"] as String)
         }
     }
 }

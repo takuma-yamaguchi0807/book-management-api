@@ -76,8 +76,8 @@ class AuthorControllerTest {
         @DisplayName("異常系")
         inner class Abnormal {
             @Test
-            @DisplayName("バリデーションエラーの場合、400 Bad Requestが返されること")
-            fun createAuthor_validationError() {
+            @DisplayName("必須項目が欠如している場合、400 Bad Requestが返されること")
+            fun createAuthor_missingRequiredFields() {
                 // given
                 val request = CreateAuthorRequest(
                     name = null,
@@ -98,6 +98,43 @@ class AuthorControllerTest {
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
                     .andExpect(jsonPath("$.details.name").value("入力してください"))
+            }
+
+            @Test
+            @DisplayName("生年月日が現在より未来の場合、400 Bad Requestが返されること")
+            fun createAuthor_futureBirthDate() {
+                // given
+                val request = CreateAuthorRequest(
+                    name = "山田太郎",
+                    birthDate = "2100-01-01"
+                )
+                val errors = mapOf("birth_date" to "現在より過去である必要があります")
+                
+                given(createAuthorUsecase.execute(any()))
+                    .willThrow(DomainValidationException(errors))
+
+                // when & then
+                mockMvc.perform(
+                    post("/api/v1/authors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                )
+                    .andExpect(status().isBadRequest)
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                    .andExpect(jsonPath("$.details.birth_date").value("現在より過去である必要があります"))
+            }
+
+            @Test
+            @DisplayName("リクエストボディが不正な場合、400 Bad Requestが返されること")
+            fun createAuthor_invalidRequestBody() {
+                // when & then
+                mockMvc.perform(
+                    post("/api/v1/authors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{ invalid json }")
+                )
+                    .andExpect(status().isBadRequest)
             }
         }
     }
@@ -158,8 +195,8 @@ class AuthorControllerTest {
             }
 
             @Test
-            @DisplayName("バリデーションエラーの場合、400 Bad Requestが返されること")
-            fun updateAuthor_validationError() {
+            @DisplayName("必須項目が欠如している場合、400 Bad Requestが返されること")
+            fun updateAuthor_missingRequiredFields() {
                 // given
                 val authorId = 1L
                 val request = UpdateAuthorRequest(
@@ -181,6 +218,61 @@ class AuthorControllerTest {
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
                     .andExpect(jsonPath("$.details.name").value("入力してください"))
+            }
+
+            @Test
+            @DisplayName("生年月日が現在より未来の場合、400 Bad Requestが返されること")
+            fun updateAuthor_futureBirthDate() {
+                // given
+                val authorId = 1L
+                val request = UpdateAuthorRequest(
+                    name = "山田太郎",
+                    birthDate = "2100-01-01"
+                )
+                val errors = mapOf("birth_date" to "現在より過去である必要があります")
+                
+                given(updateAuthorUsecase.execute(any(), any()))
+                    .willThrow(DomainValidationException(errors))
+
+                // when & then
+                mockMvc.perform(
+                    put("/api/v1/authors/$authorId")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                )
+                    .andExpect(status().isBadRequest)
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                    .andExpect(jsonPath("$.details.birth_date").value("現在より過去である必要があります"))
+            }
+
+            @Test
+            @DisplayName("リクエストボディが不正な場合、400 Bad Requestが返されること")
+            fun updateAuthor_invalidRequestBody() {
+                // given
+                val authorId = 1L
+
+                // when & then
+                mockMvc.perform(
+                    put("/api/v1/authors/$authorId")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{ invalid json }")
+                )
+                    .andExpect(status().isBadRequest)
+            }
+
+            @Test
+            @DisplayName("パスパラメータの型が不正な場合、400 Bad Requestが返されること")
+            fun updateAuthor_invalidPathParameter() {
+                // when & then
+                mockMvc.perform(
+                    put("/api/v1/authors/abc")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}")
+                )
+                    .andExpect(status().isBadRequest)
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.code").value("INVALID_REQUEST"))
             }
         }
     }

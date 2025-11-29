@@ -182,7 +182,7 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("1以上である必要があります", exception.errors["id"])
+            assertEquals("1以上である必要があります", exception.errors["id"] as String)
         }
 
         @Test
@@ -202,7 +202,7 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("入力してください", exception.errors["title"])
+            assertEquals("入力してください", exception.errors["title"] as String)
         }
 
         @ParameterizedTest
@@ -223,7 +223,7 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("0以上である必要があります", exception.errors["price"])
+            assertEquals("0以上である必要があります", exception.errors["price"] as String)
         }
 
         @Test
@@ -243,7 +243,7 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("1件以上必要です", exception.errors["author_ids"])
+            assertEquals("1件以上必要です", exception.errors["author_ids"] as String)
         }
 
         @Test
@@ -263,7 +263,7 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("1件以上必要です", exception.errors["author_ids"])
+            assertEquals("1件以上必要です", exception.errors["author_ids"] as String)
         }
 
         @Test
@@ -283,7 +283,7 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("重複があります", exception.errors["author_ids"])
+            assertEquals("重複があります", exception.errors["author_ids"] as String)
         }
 
         @ParameterizedTest
@@ -304,7 +304,8 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("1以上である必要があります", exception.errors["author_ids[0]"])
+            val authorIdsErrors = exception.errors["author_ids"] as Map<String, String>
+            assertEquals("1以上である必要があります", authorIdsErrors["0"])
         }
 
         @Test
@@ -323,9 +324,11 @@ class UpdateBookUsecaseTest {
             val exception = assertThrows(DomainValidationException::class.java) {
                 usecase.execute(bookId, request)
             }
-            assertEquals(2, exception.errors.size)
-            assertEquals("1以上である必要があります", exception.errors["author_ids[1]"])
-            assertEquals("1以上である必要があります", exception.errors["author_ids[2]"])
+            assertEquals(1, exception.errors.size)
+            val authorIdsErrors = exception.errors["author_ids"] as Map<String, String>
+            assertEquals(2, authorIdsErrors.size)
+            assertEquals("1以上である必要があります", authorIdsErrors["1"])
+            assertEquals("1以上である必要があります", authorIdsErrors["2"])
         }
 
         @Test
@@ -375,7 +378,7 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("出版済みの書籍を未出版に変更することはできません", exception.errors.get("published"))
+            assertEquals("出版済みの書籍を未出版に変更することはできません", exception.errors["published"] as String)
             verify(bookRepository).findById(any())
         }
 
@@ -406,7 +409,8 @@ class UpdateBookUsecaseTest {
                 usecase.execute(bookId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("存在しません", exception.errors.get("author_ids[0]"))
+            val authorIdsErrors = exception.errors["author_ids"] as Map<String, String>
+            assertEquals("存在しません", authorIdsErrors["0"])
         }
 
         @Test
@@ -440,9 +444,11 @@ class UpdateBookUsecaseTest {
             val exception = assertThrows(BusinessRuleViolationException::class.java) {
                 usecase.execute(bookId, request)
             }
-            assertEquals(2, exception.errors.size)
-            assertEquals("存在しません", exception.errors.get("author_ids[1]"))
-            assertEquals("存在しません", exception.errors.get("author_ids[2]"))
+            assertEquals(1, exception.errors.size)
+            val authorIdsErrors = exception.errors["author_ids"] as Map<String, String>
+            assertEquals(2, authorIdsErrors.size)
+            assertEquals("存在しません", authorIdsErrors["1"])
+            assertEquals("存在しません", authorIdsErrors["2"])
         }
     }
 }

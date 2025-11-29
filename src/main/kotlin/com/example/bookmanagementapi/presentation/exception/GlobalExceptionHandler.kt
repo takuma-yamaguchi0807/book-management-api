@@ -88,7 +88,7 @@ class GlobalExceptionHandler {
  */
 data class ValidationErrorResponse(
     val code: String,
-    val details: Map<String, String>
+    val details: Map<String, Any>
 )
 
 /**

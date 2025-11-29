@@ -114,14 +114,15 @@ class CreateBookUsecase(
         val foundAuthors = authorRepository.findByIds(authorIds)
         val foundAuthorIds = foundAuthors.map { it.id!!.value }.toSet()
         
-        val errors = mutableMapOf<String, String>()
+        val authorIdsErrors = mutableMapOf<String, String>()
         authorIds.forEachIndexed { index, authorId ->
             if (!foundAuthorIds.contains(authorId.value)) {
-                errors["${BookFields.AUTHOR_IDS}[$index]"] = ErrorMessages.RESOURCE_NOT_FOUND
+                authorIdsErrors[index.toString()] = ErrorMessages.RESOURCE_NOT_FOUND
             }
         }
         
-        if (errors.isNotEmpty()) {
+        if (authorIdsErrors.isNotEmpty()) {
+            val errors = mapOf<String, Any>(BookFields.AUTHOR_IDS to authorIdsErrors.toMap())
             throw BusinessRuleViolationException(errors)
         }
     }

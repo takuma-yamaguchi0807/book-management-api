@@ -37,7 +37,7 @@ class PriceTest {
             fun nullValue() {
                 val result = Price.create(null)
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.REQUIRED, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.REQUIRED, (result as ValidationResult.Failure).errors[0].message)
             }
 
             @Test
@@ -45,7 +45,7 @@ class PriceTest {
             fun negativeValue() {
                 val result = Price.create(-1)
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.MUST_BE_NON_NEGATIVE, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.MUST_BE_NON_NEGATIVE, (result as ValidationResult.Failure).errors[0].message)
             }
         }
     }

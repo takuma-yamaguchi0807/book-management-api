@@ -81,7 +81,7 @@ class UpdateAuthorUsecaseTest {
                 usecase.execute(authorId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("1以上である必要があります", exception.errors["id"])
+            assertEquals("1以上である必要があります", exception.errors["id"] as String)
         }
 
         @Test
@@ -99,7 +99,7 @@ class UpdateAuthorUsecaseTest {
                 usecase.execute(authorId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("入力してください", exception.errors["name"])
+            assertEquals("入力してください", exception.errors["name"] as String)
         }
 
         @Test
@@ -117,7 +117,7 @@ class UpdateAuthorUsecaseTest {
                 usecase.execute(authorId, request)
             }
             assertEquals(1, exception.errors.size)
-            assertEquals("現在より過去である必要があります", exception.errors["birth_date"])
+            assertEquals("現在より過去である必要があります", exception.errors["birth_date"] as String)
         }
 
         @Test

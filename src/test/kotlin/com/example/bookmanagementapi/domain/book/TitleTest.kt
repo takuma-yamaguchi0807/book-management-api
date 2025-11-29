@@ -39,7 +39,7 @@ class TitleTest {
             fun invalidValue(value: String?) {
                 val result = Title.create(value)
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.REQUIRED, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.REQUIRED, (result as ValidationResult.Failure).errors[0].message)
             }
         }
     }

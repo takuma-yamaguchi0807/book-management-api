@@ -16,7 +16,8 @@ object DomainValidationService {
      * @throws DomainValidationException バリデーションエラーがある場合（全フィールドのエラーを一括で返す）
      */
     fun validateAll(vararg results: ValidationResult<*>) {
-        val errors = mutableMapOf<String, String>()
+        val errors = mutableMapOf<String, Any>()
+        val arrayFieldGroups = mutableMapOf<String, MutableMap<String, String>>()
         
         results.forEach { result ->
             when (result) {
@@ -25,10 +26,28 @@ object DomainValidationService {
                 }
                 is ValidationResult.Failure -> {
                     result.errors.forEach { error ->
-                        errors[error.field] = error.message
+                        // author_ids[0] 形式を検出
+                        val arrayMatch = Regex("^(.+)\\[(\\d+)\\]$").find(error.field)
+                        if (arrayMatch != null) {
+                            val fieldName = arrayMatch.groupValues[1]
+                            val index = arrayMatch.groupValues[2]
+                            
+                            if (!arrayFieldGroups.containsKey(fieldName)) {
+                                arrayFieldGroups[fieldName] = mutableMapOf()
+                            }
+                            arrayFieldGroups[fieldName]!![index] = error.message
+                        } else {
+                            // 通常のフィールドはそのまま
+                            errors[error.field] = error.message
+                        }
                     }
                 }
             }
+        }
+        
+        // 配列フィールドをネスト構造として追加
+        arrayFieldGroups.forEach { (fieldName, indexMap) ->
+            errors[fieldName] = indexMap.toMap()
         }
         
         if (errors.isNotEmpty()) {

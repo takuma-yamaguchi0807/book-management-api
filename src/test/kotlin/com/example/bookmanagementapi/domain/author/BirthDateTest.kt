@@ -40,7 +40,7 @@ class BirthDateTest {
             fun nullOrEmpty(value: String?) {
                 val result = BirthDate.create(value)
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.REQUIRED, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.REQUIRED, (result as ValidationResult.Failure).errors[0].message)
             }
 
             @Test
@@ -48,7 +48,7 @@ class BirthDateTest {
             fun invalidFormat() {
                 val result = BirthDate.create("invalid-date")
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.INVALID_DATE_FORMAT, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.INVALID_DATE_FORMAT, (result as ValidationResult.Failure).errors[0].message)
             }
 
             @Test
@@ -57,7 +57,7 @@ class BirthDateTest {
                 val futureDate = LocalDate.now().plusDays(1).toString()
                 val result = BirthDate.create(futureDate)
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.MUST_BE_PAST, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.MUST_BE_PAST, (result as ValidationResult.Failure).errors[0].message)
             }
 
             @Test
@@ -66,7 +66,7 @@ class BirthDateTest {
                 val currentDate = LocalDate.now().toString()
                 val result = BirthDate.create(currentDate)
                 assertTrue(result is ValidationResult.Failure)
-                assertEquals(ValidationMessages.MUST_BE_PAST, (result as ValidationResult.Failure).error.message)
+                assertEquals(ValidationMessages.MUST_BE_PAST, (result as ValidationResult.Failure).errors[0].message)
             }
         }
     }
